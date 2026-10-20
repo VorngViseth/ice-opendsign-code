@@ -1,0 +1,125 @@
+--- a/knowledge-base/fuel-procurement-rules.md
++++ b/knowledge-base/fuel-procurement-rules.md
+@@ -1,4 +1,22 @@
+ # Fuel procurement rules — Delivery 1
++
++
++## Confirmed correction — individual planned dispatches (1 October 2026)
++
++This correction supersedes the general single-route/count-times-allowance model below. Historical implementation notes and completed work remain preserved.
++
++- Each truck has an ordered list of planned dispatches, each with a sequence, existing Logistics route and required litres. Different dispatches for the same truck may use different routes and quantities.
++- Truck requirement = sum of its planned dispatch litres. Daily requirement = sum of truck requirements. Dispatch count is derived from the list, not an independent multiplier.
++- These are fuel-planning runs; actual cashier-created dispatch entries are not prerequisites.
++- Example: 20 L + 15 L + 25 L = 60 L for one truck. Repeated identical allowances remain valid as a special case only.
++- Usual-plan editing and today's adjustment editor use the same run structure. Daily changes never overwrite the usual plan; prepared snapshots remain stable.
++- ED approval compares the complete before/after run lists. Approved delta = after litres minus before litres, applied once. Pending/rejected requests do not affect approved quantities. Pending additions contribute zero approved litres; pending removals remain visible and included until approved. ED-initiated changes retain their approval bypass.
++- Compact truck summaries show Truck, Planned dispatches, Approved litres, Status and Actions. Routes and per-run litres belong in detail drawers. Pending rows have one View request action. Mobile uses the same hierarchy in cards.
++- Remove from today and Remove from usual plan are separate confirmed actions; neither deletes the Logistics truck.
++- Preserve recorded purchase quantities, price snapshots, costs and approval history. Legacy count-based rows can expand into repeated identical runs without changing their saved totals.
++- Preparation/approval creates no paid expense. Existing unresolved payout, precision, correction and rejection/resubmission policies remain unresolved.
++- #59 design, #60 frontend and #62 integration must cover mixed-route runs, legacy compatibility, pending-add exclusion and approval idempotency. S should assess #61 implementation coverage against this corrected model. Keep #61 closed and preserve its completed history; track any required backend upgrade separately. No issue status, assignment or estimate changes are implied.
++
+ 
+ ## Users and confirmed workflow
+ 
+--- a/phase-3-exec/backlog_items/fuel/59.md
++++ b/phase-3-exec/backlog_items/fuel/59.md
+@@ -1,4 +1,22 @@
+ # #59 — DE-[Fuel]-Design daily fuel procurement and adjustments
++
++
++## Confirmed correction — individual planned dispatches (1 October 2026)
++
++This correction supersedes the general single-route/count-times-allowance model below. Historical implementation notes and completed work remain preserved.
++
++- Each truck has an ordered list of planned dispatches, each with a sequence, existing Logistics route and required litres. Different dispatches for the same truck may use different routes and quantities.
++- Truck requirement = sum of its planned dispatch litres. Daily requirement = sum of truck requirements. Dispatch count is derived from the list, not an independent multiplier.
++- These are fuel-planning runs; actual cashier-created dispatch entries are not prerequisites.
++- Example: 20 L + 15 L + 25 L = 60 L for one truck. Repeated identical allowances remain valid as a special case only.
++- Usual-plan editing and today's adjustment editor use the same run structure. Daily changes never overwrite the usual plan; prepared snapshots remain stable.
++- ED approval compares the complete before/after run lists. Approved delta = after litres minus before litres, applied once. Pending/rejected requests do not affect approved quantities. Pending additions contribute zero approved litres; pending removals remain visible and included until approved. ED-initiated changes retain their approval bypass.
++- Compact truck summaries show Truck, Planned dispatches, Approved litres, Status and Actions. Routes and per-run litres belong in detail drawers. Pending rows have one View request action. Mobile uses the same hierarchy in cards.
++- Remove from today and Remove from usual plan are separate confirmed actions; neither deletes the Logistics truck.
++- Preserve recorded purchase quantities, price snapshots, costs and approval history. Legacy count-based rows can expand into repeated identical runs without changing their saved totals.
++- Preparation/approval creates no paid expense. Existing unresolved payout, precision, correction and rejection/resubmission policies remain unresolved.
++- #59 design, #60 frontend and #62 integration must cover mixed-route runs, legacy compatibility, pending-add exclusion and approval idempotency. S should assess #61 implementation coverage against this corrected model. Keep #61 closed and preserve its completed history; track any required backend upgrade separately. No issue status, assignment or estimate changes are implied.
++
+ 
+ GitHub: [#59](https://github.com/markit-software/cus-00_sokheng-ice-factory/issues/59) · Issue type: DE
+ 
+--- a/phase-3-exec/backlog_items/fuel/60.md
++++ b/phase-3-exec/backlog_items/fuel/60.md
+@@ -1,4 +1,22 @@
+ # #60 — FE-[Fuel]-Build daily fuel procurement and adjustments with mock data
++
++
++## Confirmed correction — individual planned dispatches (1 October 2026)
++
++This correction supersedes the general single-route/count-times-allowance model below. Historical implementation notes and completed work remain preserved.
++
++- Each truck has an ordered list of planned dispatches, each with a sequence, existing Logistics route and required litres. Different dispatches for the same truck may use different routes and quantities.
++- Truck requirement = sum of its planned dispatch litres. Daily requirement = sum of truck requirements. Dispatch count is derived from the list, not an independent multiplier.
++- These are fuel-planning runs; actual cashier-created dispatch entries are not prerequisites.
++- Example: 20 L + 15 L + 25 L = 60 L for one truck. Repeated identical allowances remain valid as a special case only.
++- Usual-plan editing and today's adjustment editor use the same run structure. Daily changes never overwrite the usual plan; prepared snapshots remain stable.
++- ED approval compares the complete before/after run lists. Approved delta = after litres minus before litres, applied once. Pending/rejected requests do not affect approved quantities. Pending additions contribute zero approved litres; pending removals remain visible and included until approved. ED-initiated changes retain their approval bypass.
++- Compact truck summaries show Truck, Planned dispatches, Approved litres, Status and Actions. Routes and per-run litres belong in detail drawers. Pending rows have one View request action. Mobile uses the same hierarchy in cards.
++- Remove from today and Remove from usual plan are separate confirmed actions; neither deletes the Logistics truck.
++- Preserve recorded purchase quantities, price snapshots, costs and approval history. Legacy count-based rows can expand into repeated identical runs without changing their saved totals.
++- Preparation/approval creates no paid expense. Existing unresolved payout, precision, correction and rejection/resubmission policies remain unresolved.
++- #59 design, #60 frontend and #62 integration must cover mixed-route runs, legacy compatibility, pending-add exclusion and approval idempotency. S should assess #61 implementation coverage against this corrected model. Keep #61 closed and preserve its completed history; track any required backend upgrade separately. No issue status, assignment or estimate changes are implied.
++
+ 
+ GitHub: [#60](https://github.com/markit-software/cus-00_sokheng-ice-factory/issues/60) · Issue type: FE
+ 
+--- a/phase-3-exec/backlog_items/fuel/61.md
++++ b/phase-3-exec/backlog_items/fuel/61.md
+@@ -1,4 +1,22 @@
+ # #61 — BE-[Fuel]-Implement daily fuel procurement and adjustments
++
++
++## Confirmed correction — individual planned dispatches (1 October 2026)
++
++This correction supersedes the general single-route/count-times-allowance model below. Historical implementation notes and completed work remain preserved.
++
++- Each truck has an ordered list of planned dispatches, each with a sequence, existing Logistics route and required litres. Different dispatches for the same truck may use different routes and quantities.
++- Truck requirement = sum of its planned dispatch litres. Daily requirement = sum of truck requirements. Dispatch count is derived from the list, not an independent multiplier.
++- These are fuel-planning runs; actual cashier-created dispatch entries are not prerequisites.
++- Example: 20 L + 15 L + 25 L = 60 L for one truck. Repeated identical allowances remain valid as a special case only.
++- Usual-plan editing and today's adjustment editor use the same run structure. Daily changes never overwrite the usual plan; prepared snapshots remain stable.
++- ED approval compares the complete before/after run lists. Approved delta = after litres minus before litres, applied once. Pending/rejected requests do not affect approved quantities. Pending additions contribute zero approved litres; pending removals remain visible and included until approved. ED-initiated changes retain their approval bypass.
++- Compact truck summaries show Truck, Planned dispatches, Approved litres, Status and Actions. Routes and per-run litres belong in detail drawers. Pending rows have one View request action. Mobile uses the same hierarchy in cards.
++- Remove from today and Remove from usual plan are separate confirmed actions; neither deletes the Logistics truck.
++- Preserve recorded purchase quantities, price snapshots, costs and approval history. Legacy count-based rows can expand into repeated identical runs without changing their saved totals.
++- Preparation/approval creates no paid expense. Existing unresolved payout, precision, correction and rejection/resubmission policies remain unresolved.
++- #59 design, #60 frontend and #62 integration must cover mixed-route runs, legacy compatibility, pending-add exclusion and approval idempotency. S should assess #61 implementation coverage against this corrected model. Keep #61 closed and preserve its completed history; track any required backend upgrade separately. No issue status, assignment or estimate changes are implied.
++
+ 
+ GitHub: [#61](https://github.com/markit-software/cus-00_sokheng-ice-factory/issues/61) · Issue type: BE
+ 
+--- a/phase-3-exec/backlog_items/fuel/62.md
++++ b/phase-3-exec/backlog_items/fuel/62.md
+@@ -1,4 +1,22 @@
+ # #62 — INT-[Fuel]-Connect and verify daily fuel procurement and adjustments
++
++
++## Confirmed correction — individual planned dispatches (1 October 2026)
++
++This correction supersedes the general single-route/count-times-allowance model below. Historical implementation notes and completed work remain preserved.
++
++- Each truck has an ordered list of planned dispatches, each with a sequence, existing Logistics route and required litres. Different dispatches for the same truck may use different routes and quantities.
++- Truck requirement = sum of its planned dispatch litres. Daily requirement = sum of truck requirements. Dispatch count is derived from the list, not an independent multiplier.
++- These are fuel-planning runs; actual cashier-created dispatch entries are not prerequisites.
++- Example: 20 L + 15 L + 25 L = 60 L for one truck. Repeated identical allowances remain valid as a special case only.
++- Usual-plan editing and today's adjustment editor use the same run structure. Daily changes never overwrite the usual plan; prepared snapshots remain stable.
++- ED approval compares the complete before/after run lists. Approved delta = after litres minus before litres, applied once. Pending/rejected requests do not affect approved quantities. Pending additions contribute zero approved litres; pending removals remain visible and included until approved. ED-initiated changes retain their approval bypass.
++- Compact truck summaries show Truck, Planned dispatches, Approved litres, Status and Actions. Routes and per-run litres belong in detail drawers. Pending rows have one View request action. Mobile uses the same hierarchy in cards.
++- Remove from today and Remove from usual plan are separate confirmed actions; neither deletes the Logistics truck.
++- Preserve recorded purchase quantities, price snapshots, costs and approval history. Legacy count-based rows can expand into repeated identical runs without changing their saved totals.
++- Preparation/approval creates no paid expense. Existing unresolved payout, precision, correction and rejection/resubmission policies remain unresolved.
++- #59 design, #60 frontend and #62 integration must cover mixed-route runs, legacy compatibility, pending-add exclusion and approval idempotency. S should assess #61 implementation coverage against this corrected model. Keep #61 closed and preserve its completed history; track any required backend upgrade separately. No issue status, assignment or estimate changes are implied.
++
+ 
+ GitHub: [#62](https://github.com/markit-software/cus-00_sokheng-ice-factory/issues/62) · Issue type: INT
+ 

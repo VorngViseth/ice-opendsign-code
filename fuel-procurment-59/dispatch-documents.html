@@ -1,0 +1,13 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Dispatch receipts · Sok Heng</title></head>
+<body><p><a id="destination" href="driver-sales.html?tab=receipts">Open Dispatch receipts / បើកបង្កាន់ដៃចែកចាយ</a></p>
+<script>
+const target=new URL('driver-sales.html',location.href);
+target.search=location.search;
+target.searchParams.delete('view');
+target.searchParams.set('tab','receipts');
+const hash=location.hash.slice(1);
+target.hash=hash.startsWith('dispatch=')?hash:hash?'dispatch='+encodeURIComponent(decodeURIComponent(hash)):'';
+document.getElementById('destination').href=target.href;
+location.replace(target.href);
+</script></body></html>

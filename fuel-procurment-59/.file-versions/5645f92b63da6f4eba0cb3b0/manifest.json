@@ -1,0 +1,22 @@
+{
+  "schemaVersion": 2,
+  "fileName": "references/legacy-prototype/driver-sales.html",
+  "currentVersionId": "cc23246c-a277-4961-9436-82f4cd4e6abd",
+  "entries": [
+    {
+      "id": "cc23246c-a277-4961-9436-82f4cd4e6abd",
+      "fileName": "references/legacy-prototype/driver-sales.html",
+      "version": 1,
+      "label": "Version 1",
+      "createdAt": 1790404364994,
+      "source": "ai",
+      "prompt": "let's do it",
+      "size": 5409,
+      "mime": "text/html; charset=utf-8",
+      "kind": "html",
+      "contentPath": "0001-cc23246c-a277-4961-9436-82f4cd4e6abd.html",
+      "contentDigest": "67310616d872caff20aae2f37926c8229a51d2d86d2ae7e4f636ca2b4ba099a0",
+      "promptSource": "message"
+    }
+  ]
+}

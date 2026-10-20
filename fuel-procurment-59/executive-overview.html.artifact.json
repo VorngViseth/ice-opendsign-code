@@ -1,0 +1,19 @@
+{
+  "version": 1,
+  "kind": "html",
+  "title": "executive-overview.html",
+  "entry": "executive-overview.html",
+  "renderer": "html",
+  "status": "complete",
+  "exports": [
+    "html",
+    "pdf",
+    "zip"
+  ],
+  "createdAt": "2026-09-29T07:57:54.038Z",
+  "updatedAt": "2026-09-29T07:57:54.038Z",
+  "metadata": {
+    "inferred": true,
+    "reconciled": true
+  }
+}

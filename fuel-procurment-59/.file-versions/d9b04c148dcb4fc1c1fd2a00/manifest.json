@@ -1,0 +1,22 @@
+{
+  "schemaVersion": 2,
+  "fileName": "backups/pre-rollback-react/dispatch.html",
+  "currentVersionId": "e760b156-ffcc-4585-9b4d-da7144ff8b85",
+  "entries": [
+    {
+      "id": "e760b156-ffcc-4585-9b4d-da7144ff8b85",
+      "fileName": "backups/pre-rollback-react/dispatch.html",
+      "version": 1,
+      "label": "Version 1",
+      "createdAt": 1790563470152,
+      "source": "ai",
+      "prompt": "before react typescript",
+      "size": 579,
+      "mime": "text/html; charset=utf-8",
+      "kind": "html",
+      "contentPath": "0001-e760b156-ffcc-4585-9b4d-da7144ff8b85.html",
+      "contentDigest": "4243a5b1cbffb08727741261a07f564140c142dae3fdc85dcbefb7f886836819",
+      "promptSource": "message"
+    }
+  ]
+}

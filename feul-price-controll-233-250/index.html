@@ -21,7 +21,7 @@
       --accent-50: #eef7f9;
       --accent-100: #d4ecef;
       --accent-500: #0d7c90;
-      --accent-600: #0a6b7d;
+      --accent-600: #010404;
       --accent-700: #085563;
 
       --success: #10b981;
@@ -460,39 +460,39 @@
     .field-error { color: var(--danger-fg); }
     .field-hint { color: var(--warning-fg); }
 
+    .price-impact-row {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+      gap: 16px;
+      padding: 0 20px;
+      align-items: start;
+    }
+    .price-impact-row .form-section { padding: 18px 0 0; }
+    .price-impact-row > div:last-child { padding-top: 18px; }
+    .price-impact-row .form-section label,
+    .price-impact-row > div:last-child > span {
+      display: block;
+      font-size: 10px;
+      font-weight: 700;
+      color: var(--muted);
+      letter-spacing: .06em;
+      text-transform: uppercase;
+    }
+
     .impact-panel {
-      margin: 14px 20px 0;
+      margin: 7px 0 0;
       padding: 12px 14px;
+      min-height: 46px;
+      box-sizing: border-box;
       border-radius: 9px;
       background: var(--bg);
       border: 1px solid var(--border);
-      display: grid;
-      grid-template-columns: 1fr 1.3fr auto;
-      gap: 16px;
+      display: flex;
       align-items: center;
-    }
-    .impact-panel > div { display: flex; flex-direction: column; gap: 2px; }
-    .impact-panel > div + div { padding-left: 16px; border-left: 1px solid var(--border); }
-    .impact-panel span:not(.usual-pill) {
-      color: var(--subtle);
-      font-size: 9px;
-      font-weight: 700;
-      letter-spacing: .05em;
-      text-transform: uppercase;
     }
     .impact-panel strong { font-size: 13px; font-variant-numeric: tabular-nums; }
     .impact-up { color: var(--warning-fg) !important; }
     .impact-down { color: var(--success-fg) !important; }
-
-    .usual-pill {
-      border-radius: 999px;
-      font-size: 10px;
-      font-weight: 600;
-      padding: 5px 8px;
-      background: var(--success-bg);
-      color: var(--success-fg);
-      white-space: nowrap;
-    }
 
     /* ─── File upload ─── */
     .file-input { display: none; }
@@ -840,8 +840,14 @@
       .form-section { padding: 15px 15px 0; }
       .price-input { height: 50px; }
       .price-input input { font-size: 19px; }
-      .impact-panel { margin: 12px 15px 0; grid-template-columns: 1fr 1fr; gap: 10px; }
-      .usual-pill { grid-column: 1 / -1; text-align: center; }
+      .price-impact-row {
+        grid-template-columns: 1fr;
+        gap: 0;
+        padding: 0 15px;
+      }
+      .price-impact-row .form-section { padding: 15px 0 0; }
+      .price-impact-row > div:last-child { padding-top: 15px; }
+      .impact-panel { margin: 13px 0 0; min-height: 50px; }
       .label-row { align-items: flex-start; gap: 12px; }
       .label-row > span { text-align: right; max-width: 180px; }
       .upload-box { min-height: 66px; }
@@ -1047,27 +1053,25 @@
               <button class="button button--ghost" onclick="document.getElementById('successNotice').style.display='none'" id="closeSuccessBtn">Close</button>
             </div>
 
-            <!-- Price input -->
-            <div class="form-section">
-              <label for="priceInput" id="newPriceLabel">New price</label>
-              <div class="price-input" id="priceInputWrap">
-                <input type="text" id="priceInput" inputmode="numeric" value="4200">
-                <span id="priceUnit">KHR / L</span>
+            <div class="price-impact-row">
+              <!-- Price input -->
+              <div class="form-section">
+                <label for="priceInput" id="newPriceLabel">New price</label>
+                <div class="price-input" id="priceInputWrap">
+                  <input type="text" id="priceInput" inputmode="numeric" value="4200">
+                  <span id="priceUnit">KHR / L</span>
+                </div>
+                <p class="field-error" id="priceError" style="display: none;">Enter a price greater than 0 KHR.</p>
               </div>
-              <p class="field-error" id="priceError" style="display: none;">Enter a price greater than 0 KHR.</p>
-            </div>
 
-            <!-- Impact panel -->
-            <div class="impact-panel" data-od-id="impact-panel">
-              <div>
-                <span id="approvedLabel">APPROVED QUANTITY TODAY</span>
-                <strong id="approvedValue">60 L</strong>
-              </div>
+              <!-- Impact panel -->
+
               <div>
                 <span id="impactLabel">TODAY'S APPROVED COST IMPACT</span>
-                <strong id="impactValue" class="impact-up">+12,000 KHR</strong>
+                <div class="impact-panel" data-od-id="impact-panel">
+                  <strong id="impactValue" class="impact-up">+12,000 KHR</strong>
+                </div>
               </div>
-              <span class="usual-pill" id="usualPill">Usual plan unchanged</span>
             </div>
 
             <!-- Evidence upload -->
@@ -1191,7 +1195,7 @@
     const copy = {
       en: {
         admin: 'ADMINISTRATION', allSettings: 'All settings', apply: 'Apply new price',
-        approved: 'APPROVED QUANTITY TODAY', audit: 'Audit history',
+        audit: 'Audit history',
         auditHint: 'Price-specific changes, newest first', changed: 'Price changed',
         close: 'Close', current: 'Current price', dailyImpact: "TODAY'S APPROVED COST IMPACT",
         dashboard: 'Dashboard', date: '3 October 2026', diesel: 'Diesel',
@@ -1216,11 +1220,11 @@
         super: 'Super petroleum', temporary: "Today's temporary changes",
         temporaryHint: 'GA applies temporary adjustments directly. The usual plan is not changed.',
         trucks: 'Trucks', unit: 'All values are KHR per litre', upload: 'Attach evidence',
-        users: 'Users', usual: 'Usual plan unchanged', view: 'Review',
+        users: 'Users', view: 'Review',
       },
       km: {
         admin: 'រដ្ឋបាល', allSettings: 'ការកំណត់ទាំងអស់', apply: 'អនុវត្តតម្លៃថ្មី',
-        approved: 'បរិមាណបានអនុម័តថ្ងៃនេះ', audit: 'ប្រវត្តិការកែប្រែ',
+        audit: 'ប្រវត្តិការកែប្រែ',
         auditHint: 'ការផ្លាស់ប្តូរតាមប្រភេទឥន្ធនៈ ថ្មីបំផុតមុន', changed: 'បានប្តូរតម្លៃ',
         close: 'បិទ', current: 'តម្លៃបច្ចុប្បន្ន', dailyImpact: 'ផលប៉ះពាល់លើថ្លៃដែលបានអនុម័តថ្ងៃនេះ',
         dashboard: 'ទំព័រដើម', date: '៣ តុលា ២០២៦', diesel: 'ម៉ាស៊ូត',
@@ -1245,7 +1249,7 @@
         super: 'ប្រេងសាំងស៊ុបពែរ', temporary: 'ការផ្លាស់ប្តូរបណ្ដោះអាសន្នថ្ងៃនេះ',
         temporaryHint: 'GA អនុវត្តការកែតម្រូវបណ្ដោះអាសន្នដោយផ្ទាល់។ ផែនការធម្មតាមិនផ្លាស់ប្តូរ។',
         trucks: 'រថយន្ត', unit: 'តម្លៃទាំងអស់គិតជារៀលក្នុងមួយលីត្រ', upload: 'ភ្ជាប់ភស្តុតាង',
-        users: 'អ្នកប្រើប្រាស់', usual: 'ផែនការធម្មតាមិនផ្លាស់ប្តូរ', view: 'ពិនិត្យ',
+        users: 'អ្នកប្រើប្រាស់', view: 'ពិនិត្យ',
       }
     };
 
@@ -1357,10 +1361,7 @@
       document.getElementById('editFuelName').textContent = T[fuel.key];
       document.getElementById('newPriceLabel').textContent = T.newPrice;
       document.getElementById('priceUnit').textContent = T.litre;
-      document.getElementById('approvedLabel').textContent = T.approved;
-      document.getElementById('approvedValue').textContent = fuel.litres + ' L';
       document.getElementById('impactLabel').textContent = T.dailyImpact;
-      document.getElementById('usualPill').textContent = T.usual;
       document.getElementById('evidenceLabel').innerHTML = T.evidence + '<span class="required">*</span>';
       document.getElementById('evidenceHint').textContent = T.evidenceHint;
       document.getElementById('applyLabel').textContent = T.apply;

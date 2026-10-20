@@ -1,0 +1,752 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Dispatch Planning — Sok Heng Ice Factory</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Hanuman:wght@400;700;900&family=Hanken+Grotesk:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <style>
+    :root {
+      --bg: #f8fafc; --surface: #fff; --surface-hover: #f1f5f9;
+      --fg: #1e293b; --fg-muted: #64748b; --fg-subtle: #94a3b8;
+      --border: #e2e8f0; --border-strong: #cbd5e1;
+      --accent-50: #eef7f9; --accent-100: #d4ecef;
+      --accent-500: #0d7c90; --accent-600: #0a6b7d; --accent-700: #085563;
+      --success: #10b981; --success-bg: #ecfdf5; --success-fg: #059669;
+      --warning: #f59e0b; --warning-bg: #fffbeb; --warning-fg: #d97706;
+      --danger: #ef4444; --danger-bg: #fef2f2; --danger-fg: #dc2626;
+      --info: #3b82f6; --info-bg: #eff6ff; --info-fg: #2563eb;
+      --amber: #f59e0b; --amber-bg: #fffbeb; --amber-fg: #d97706;
+      --green: #10b981; --green-bg: #ecfdf5; --green-fg: #059669;
+      --font-primary: 'Hanken Grotesk', 'Hanuman', ui-sans-serif, system-ui, sans-serif;
+      --font-mono: ui-monospace, 'SF Mono', 'Cascadia Code', monospace;
+      --text-xs: 10px; --text-sm: 12px; --text-base: 14px; --text-lg: 16px;
+      --text-xl: 18px; --text-2xl: 20px; --text-3xl: 24px;
+      --space-1: 4px; --space-2: 8px; --space-3: 12px; --space-4: 16px;
+      --space-5: 20px; --space-6: 24px; --space-8: 32px;
+      --radius-sm: 6px; --radius-md: 8px; --radius-lg: 12px; --radius-full: 9999px;
+      --shadow-sm: 0 1px 2px rgba(0,0,0,.04);
+      --shadow-md: 0 4px 6px -1px rgba(0,0,0,.05), 0 2px 4px -1px rgba(0,0,0,.03);
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body { height: 100%; }
+    body { margin: 0; background: var(--bg); color: var(--fg); font-family: var(--font-primary); font-size: var(--text-base); line-height: 1.5; -webkit-font-smoothing: antialiased; }
+    button { font: inherit; cursor: pointer; border: none; background: none; }
+    input, select, textarea { font: inherit; }
+    @media (prefers-reduced-motion: reduce) { *, *::before, *::after { transition-duration: .01ms !important; animation-duration: .01ms !important; } }
+    [hidden] { display: none !important; }
+
+    .app-shell { display: flex; height: 100%; overflow: hidden; }
+    .sidebar-ph { width: 256px; background: var(--surface); border-right: 1px solid var(--border); flex-shrink: 0; display: flex; align-items: center; justify-content: center; padding: var(--space-4); }
+    .sidebar-ph-label { font-size: var(--text-xs); font-weight: 600; text-transform: uppercase; letter-spacing: .06em; color: var(--fg-subtle); text-align: center; padding: 2rem 1rem; border: 2px dashed var(--border); border-radius: var(--radius-md); white-space: nowrap; }
+    .main-area { flex: 1; display: flex; flex-direction: column; min-width: 0; min-height: 0; }
+    .header-ph { height: 56px; background: var(--surface); border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; padding: 0 var(--space-6); flex-shrink: 0; }
+    .header-ph-label { font-size: var(--text-xs); font-weight: 600; text-transform: uppercase; letter-spacing: .06em; color: var(--fg-subtle); border: 2px dashed var(--border); border-radius: var(--radius-md); padding: var(--space-2) var(--space-4); }
+    .lang-toggle { display: inline-flex; background: var(--bg); border: 1px solid var(--border); border-radius: var(--radius-sm); overflow: hidden; }
+    .lang-toggle button { padding: var(--space-1) var(--space-3); font-size: var(--text-sm); font-weight: 500; color: var(--fg-muted); border-right: 1px solid var(--border); }
+    .lang-toggle button:last-child { border-right: none; }
+    .lang-toggle button.active { background: var(--accent-500); color: #fff; }
+
+    .main-content { flex: 1; display: flex; flex-direction: column; min-height: 0; overflow: hidden; }
+    .content-chrome { flex-shrink: 0; padding: var(--space-6) var(--space-8) 0; max-width: 960px; width: 100%; margin: 0 auto; }
+    .content-scroll { flex: 1; overflow-y: auto; padding: var(--space-4) var(--space-8) var(--space-8); }
+    .content-inner { max-width: 960px; width: 100%; margin: 0 auto; }
+
+    .page-header { margin-bottom: var(--space-5); }
+    .page-title { font-size: var(--text-2xl); font-weight: 700; }
+    .page-desc { font-size: var(--text-base); color: var(--fg-muted); margin: var(--space-1) 0 0; }
+
+    .tab-bar { display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid var(--border); margin-bottom: var(--space-4); }
+    .tabs-line { display: flex; gap: 0; }
+    .tab-line { padding: var(--space-2) var(--space-4); font-size: var(--text-sm); font-weight: 500; color: var(--fg-muted); border-bottom: 2px solid transparent; margin-bottom: -1px; cursor: pointer; transition: color .15s, border-color .15s; }
+    .tab-line.active { color: var(--fg); border-bottom-color: var(--accent-500); }
+    .tab-line:not(.active):hover { color: var(--fg); border-bottom-color: var(--border-strong); }
+
+    .toolbar-row { display: flex; gap: var(--space-3); align-items: center; margin-bottom: var(--space-5); }
+    .search-field { flex: 1; position: relative; }
+    .search-field .search-icon { position: absolute; left: var(--space-3); top: 50%; transform: translateY(-50%); color: var(--fg-subtle); font-size: var(--text-sm); pointer-events: none; }
+    .search-field .input { padding-left: 34px; }
+    .toolbar-btn { flex-shrink: 0; }
+
+    .input { width: 100%; padding: 8px var(--space-3); border: 1px solid var(--border); border-radius: var(--radius-md); background: var(--surface); color: var(--fg); font-size: var(--text-base); transition: border-color .15s, box-shadow .15s; }
+    .input:focus { outline: none; border-color: var(--accent-500); box-shadow: 0 0 0 3px var(--accent-50); }
+    .input.is-error { border-color: var(--danger); }
+
+    .btn { display: inline-flex; align-items: center; justify-content: center; gap: var(--space-2); padding: 8px 16px; border-radius: var(--radius-md); border: 1px solid transparent; font-size: var(--text-sm); font-weight: 600; transition: background .15s, border-color .15s, opacity .15s; min-height: 36px; white-space: nowrap; }
+    .btn:focus-visible { outline: 2px solid var(--accent-600); outline-offset: 2px; }
+    .btn-primary { background: var(--accent-500); color: #fff; }
+    .btn-primary:hover { background: var(--accent-600); }
+    .btn-primary:disabled { opacity: .5; cursor: not-allowed; }
+    .btn-secondary { background: var(--surface); border-color: var(--border); color: var(--fg); }
+    .btn-secondary:hover { background: var(--surface-hover); }
+    .btn-ghost { color: var(--fg-muted); }
+    .btn-ghost:hover { background: var(--surface-hover); color: var(--fg); }
+    .btn-sm { padding: 4px 10px; font-size: var(--text-xs); min-height: 28px; }
+
+    .segmented { display: inline-flex; background: var(--bg); border: 1px solid var(--border); border-radius: var(--radius-md); overflow: hidden; }
+    .segmented button { padding: var(--space-2) var(--space-4); font-size: var(--text-sm); font-weight: 500; color: var(--fg-muted); border-right: 1px solid var(--border); transition: background .15s, color .15s; }
+    .segmented button:last-child { border-right: none; }
+    .segmented button.active { background: var(--accent-500); color: #fff; }
+
+    .dispatch-cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: var(--space-4); }
+    .dispatch-cards.empty-view { display: flex; align-items: center; justify-content: center; min-height: calc(100vh - 240px); }
+    .dispatch-cards.empty-view .empty-state { width: 100%; max-width: 560px; }
+    .dispatch-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: var(--space-4) var(--space-5); transition: border-color .15s, box-shadow .15s; }
+    .dispatch-card:hover { border-color: var(--accent-500); box-shadow: var(--shadow-md); }
+    .dispatch-card-header { display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: var(--space-3); }
+    .dispatch-card-id { font-weight: 600; font-size: var(--text-lg); font-family: var(--font-mono); }
+    .dispatch-card-meta { display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-2) var(--space-4); font-size: var(--text-sm); }
+    .dispatch-card-meta-label { font-size: var(--text-xs); font-weight: 600; text-transform: uppercase; letter-spacing: .06em; color: var(--fg-muted); }
+    .dispatch-card-meta-value { font-weight: 500; }
+    .dispatch-card-footer { display: flex; align-items: center; justify-content: space-between; margin-top: var(--space-3); padding-top: var(--space-3); border-top: 1px solid var(--border); gap: var(--space-2); }
+
+    .status-badge { display: inline-flex; align-items: center; gap: 4px; padding: 2px 10px; border-radius: var(--radius-full); font-size: var(--text-xs); font-weight: 600; }
+    .status-created { background: var(--info-bg); color: var(--info-fg); }
+    .status-dispatched { background: var(--amber-bg); color: var(--amber-fg); }
+    .status-returned { background: var(--green-bg); color: var(--green-fg); }
+
+    .empty-state { text-align: center; padding: 4rem 1.5rem; }
+    .empty-icon { width: 64px; height: 64px; border-radius: 50%; background: var(--accent-50); display: flex; align-items: center; justify-content: center; margin: 0 auto 1rem; font-size: 24px; color: var(--accent-500); }
+    .empty-title { font-size: var(--text-lg); font-weight: 600; margin: 0 0 var(--space-2); }
+    .empty-desc { font-size: var(--text-sm); color: var(--fg-muted); max-width: 36ch; margin: 0 auto; }
+
+    .log-list { display: flex; flex-direction: column; gap: var(--space-3); }
+    .log-item { display: flex; align-items: flex-start; gap: var(--space-3); padding: var(--space-3) var(--space-4); border: 1px solid var(--border); border-radius: var(--radius-md); background: var(--surface); }
+    .log-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; margin-top: 6px; }
+    .log-dot.create { background: var(--info-fg); }
+    .log-dot.print { background: var(--accent-500); }
+    .log-dot.dispatch { background: var(--amber-fg); }
+    .log-dot.return { background: var(--success-fg); }
+    .log-content { flex: 1; }
+    .log-title { font-weight: 600; font-size: var(--text-sm); }
+    .log-meta { font-size: var(--text-xs); color: var(--fg-muted); margin-top: 2px; }
+
+    /* Slide Panel */
+    .slide-overlay { position: fixed; inset: 0; background: rgba(17,24,39,.45); backdrop-filter: blur(4px); z-index: 300; opacity: 0; pointer-events: none; transition: opacity .2s; }
+    .slide-overlay.open { opacity: 1; pointer-events: auto; }
+    .slide-panel { position: fixed; top: 0; right: 0; bottom: 0; width: 100%; max-width: 560px; background: var(--surface); z-index: 301; transform: translateX(100%); transition: transform .3s ease-out; display: flex; flex-direction: column; box-shadow: -4px 0 32px rgba(0,0,0,.12); }
+    .slide-panel.open { transform: translateX(0); }
+    .slide-header { padding: var(--space-4) var(--space-5); border-bottom: 1px solid var(--border); flex-shrink: 0; display: flex; align-items: center; justify-content: space-between; gap: var(--space-3); }
+    .slide-header h3 { font-size: var(--text-lg); font-weight: 700; }
+    .slide-header-id { font-family: var(--font-mono); font-size: var(--text-sm); color: var(--fg-muted); }
+    .slide-body { flex: 1; overflow-y: auto; padding: var(--space-5); }
+    .slide-footer { padding: var(--space-4) var(--space-5); border-top: 1px solid var(--border); display: flex; align-items: center; justify-content: flex-end; gap: var(--space-2); flex-shrink: 0; }
+
+    .field-label { display: block; font-size: var(--text-xs); font-weight: 600; text-transform: uppercase; letter-spacing: .06em; color: var(--fg-muted); margin-bottom: var(--space-2); }
+    .field-section { margin-bottom: var(--space-5); }
+    .field-section-title { font-size: var(--text-sm); font-weight: 600; color: var(--fg); margin-bottom: var(--space-3); padding-bottom: var(--space-2); border-bottom: 1px solid var(--border); }
+    .picker-field { width: 100%; padding: 8px var(--space-3); padding-right: 40px; border: 1px solid var(--border); border-radius: var(--radius-md); background: var(--surface); color: var(--fg); font-size: var(--text-base); text-align: left; cursor: pointer; position: relative; }
+    .picker-field:focus { outline: none; border-color: var(--accent-500); box-shadow: 0 0 0 3px var(--accent-50); }
+    .picker-field.has-value { color: var(--fg); }
+    .picker-field .picker-icon { position: absolute; right: var(--space-3); top: 50%; transform: translateY(-50%); color: var(--fg-subtle); font-size: var(--text-sm); }
+    .picker-field.is-error { border-color: var(--danger); }
+
+    /* Center Modal / Tile Picker / Confirmation */
+    .modal-overlay { position: fixed; inset: 0; background: rgba(17,24,39,.45); backdrop-filter: blur(4px); z-index: 400; display: none; align-items: center; justify-content: center; padding: var(--space-5); }
+    .modal-overlay.open { display: flex; }
+    .modal { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background: var(--surface); border-radius: var(--radius-lg); box-shadow: 0 10px 15px -3px rgba(0,0,0,.08); width: calc(100% - 2.5rem); max-width: 480px; max-height: calc(100vh - 2.5rem); display: none; flex-direction: column; overflow: hidden; z-index: 401; }
+    .modal.open { display: flex; }
+    .modal-header { padding: var(--space-4) var(--space-5); border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; flex-shrink: 0; }
+    .modal-header h3 { font-size: var(--text-lg); font-weight: 600; }
+    .modal-body { padding: var(--space-4) var(--space-5); overflow-y: auto; flex: 1; }
+    .modal-footer { padding: var(--space-4) var(--space-5); border-top: 1px solid var(--border); display: flex; align-items: center; justify-content: flex-end; gap: var(--space-2); flex-shrink: 0; }
+
+    /* Tile Picker */
+    .tile-picker-search { margin-bottom: var(--space-4); }
+    .tile-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: var(--space-3); }
+    .tile { display: flex; flex-direction: column; align-items: center; padding: var(--space-3) var(--space-4); border: 1px solid var(--border); border-radius: var(--radius-md); cursor: pointer; transition: border-color .15s, background .15s; text-align: center; }
+    .tile:hover { border-color: var(--accent-500); background: var(--accent-50); }
+    .tile.selected { border-color: var(--accent-500); background: var(--accent-50); }
+    .tile.disabled { opacity: .5; cursor: not-allowed; }
+    .tile.disabled:hover { border-color: var(--border); background: none; }
+    .tile-name { font-weight: 600; font-size: var(--text-sm); }
+    .tile-context { font-size: var(--text-xs); color: var(--fg-muted); margin-top: 2px; }
+
+    /* Receipt */
+    .receipt { border: 1px solid var(--border); border-radius: var(--radius-md); padding: var(--space-5); background: var(--surface); max-width: 360px; margin: 0 auto; }
+    .receipt-header { text-align: center; margin-bottom: var(--space-4); border-bottom: 1px dashed var(--border); padding-bottom: var(--space-3); }
+    .receipt-factory { font-weight: 700; font-size: var(--text-sm); letter-spacing: .08em; }
+    .receipt-title { font-size: var(--text-xs); color: var(--fg-muted); margin-top: 2px; }
+    .receipt-id { font-family: var(--font-mono); font-size: var(--text-lg); font-weight: 700; color: var(--accent-500); margin-top: var(--space-2); }
+    .receipt-date { font-size: var(--text-sm); color: var(--fg-muted); }
+    .receipt-row { display: flex; justify-content: space-between; padding: 4px 0; font-size: var(--text-sm); }
+    .receipt-row .label { color: var(--fg-muted); }
+    .receipt-products { border-top: 1px dashed var(--border); margin-top: var(--space-3); padding-top: var(--space-3); }
+    .receipt-products-title { font-size: var(--text-xs); font-weight: 600; text-transform: uppercase; letter-spacing: .06em; color: var(--fg-muted); margin-bottom: var(--space-2); }
+    .receipt-footer { border-top: 1px dashed var(--border); margin-top: var(--space-3); padding-top: var(--space-3); font-size: var(--text-xs); color: var(--fg-muted); text-align: center; }
+
+    .qty-row { display: flex; align-items: center; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid var(--border); }
+    .qty-row:last-child { border-bottom: none; }
+    .qty-input { width: 70px; padding: 6px 8px; border: 1px solid var(--border); border-radius: var(--radius-sm); font-family: var(--font-mono); font-size: var(--text-base); text-align: right; background: var(--surface); }
+    .qty-input:focus { outline: none; border-color: var(--accent-500); box-shadow: 0 0 0 3px var(--accent-50); }
+    .stepper-btn { width: 28px; height: 28px; display: inline-flex; align-items: center; justify-content: center; padding: 0; line-height: 1; flex-shrink: 0; }
+    .stepper-btn i { display: block; line-height: 1; }
+
+    .annotation { display: inline-flex; align-items: center; gap: 4px; padding: 2px 8px; background: var(--warning-bg); border: 1px solid #fde68a; border-radius: var(--radius-full); font-size: var(--text-xs); font-weight: 600; color: var(--warning-fg); }
+
+    @keyframes toastIn { from { opacity: 0; transform: translateX(20px); } to { opacity: 1; transform: translateX(0); } }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .toast-msg { position: fixed; top: 16px; right: 16px; z-index: 9999; min-width: 300px; max-width: 420px; display: flex; align-items: flex-start; gap: 12px; padding: 16px 20px; border-radius: 12px; box-shadow: 0 8px 24px rgba(0,0,0,.18); animation: toastIn .25s ease-out; }
+    .toast-msg.success { background: #ecfdf5; border: 1px solid #a7f3d0; border-left: 4px solid #059669; color: #059669; }
+    .toast-msg.danger { background: #fef2f2; border: 1px solid #fecaca; border-left: 4px solid #dc2626; color: #dc2626; }
+
+    @media print {
+      .sidebar-ph, .header-ph, .tab-bar, .toolbar-row, .slide-overlay, .slide-panel, .modal-overlay, .toast-msg { display: none !important; }
+      .receipt { border: 1px solid #000; max-width: 100%; }
+    }
+
+    @media (max-width: 920px) {
+      .sidebar-ph { display: none; }
+      .header-ph { padding: 0 var(--space-4); }
+      .content-chrome, .content-scroll { padding-left: var(--space-4); padding-right: var(--space-4); }
+      .dispatch-cards { grid-template-columns: 1fr; }
+      .slide-panel { max-width: 100%; }
+      .tile-grid { grid-template-columns: 1fr 1fr; }
+    }
+    @media (max-width: 640px) {
+      .tile-grid { grid-template-columns: 1fr; }
+      .toolbar-row { flex-wrap: wrap; }
+      .search-field { width: 100%; }
+    }
+  </style>
+</head>
+<body>
+  <div class="app-shell">
+    <aside class="sidebar-ph"><div class="sidebar-ph-label">Sidebar</div></aside>
+    <div class="main-area">
+      <header class="header-ph">
+        <div class="header-ph-label">Header</div>
+        <div class="lang-toggle">
+          <button id="lang-en" class="active" onclick="setLang('en')">EN</button>
+          <button id="lang-km" onclick="setLang('km')">ខ្មែរ</button>
+        </div>
+      </header>
+      <div class="main-content">
+        <div class="content-chrome">
+          <div class="page-header">
+            <h1 class="page-title" data-en="Dispatch Planning" data-km="ផែនការដឹកជញ្ជូន">Dispatch Planning</h1>
+            <p class="page-desc" data-en="Create and manage dispatch plans." data-km="បង្កើត និងគ្រប់គ្រងផែនការដឹកជញ្ជូន។">Create and manage dispatch plans.</p>
+          </div>
+          <div class="tab-bar">
+            <div class="tabs-line">
+              <button class="tab-line active" data-tab="plans" onclick="switchTab('plans')" data-en="Plans" data-km="ផែនការ">Plans</button>
+              <button class="tab-line" data-tab="history" onclick="switchTab('history')" data-en="History" data-km="ប្រវត្តិ">History</button>
+              <button class="tab-line" data-tab="log" onclick="switchTab('log')" data-en="Activity Log" data-km="កំណត់ត្រាសកម្មភាព">Activity Log</button>
+            </div>
+          </div>
+          <div class="toolbar-row">
+            <div class="search-field">
+              <i class="fa-solid fa-magnifying-glass search-icon"></i>
+              <input type="text" id="card-search" class="input" data-en-placeholder="Search by dispatch #, truck, or driver…" data-km-placeholder="ស្វែងរកតាមលេខ រថយន្ត ឬអ្នកបើកបរ…" placeholder="Search by dispatch #, truck, or driver…" oninput="filterCards()" />
+            </div>
+            <button class="btn btn-primary toolbar-btn" onclick="openCreatePanel()"><i class="fa-solid fa-plus"></i> <span data-en="Create Dispatch" data-km="បង្កើត">Create Dispatch</span></button>
+          </div>
+        </div>
+        <div class="content-scroll" id="plans-scroll">
+          <div class="content-inner">
+            <div id="tab-plans"><div id="plans-list" class="dispatch-cards"></div></div>
+          </div>
+        </div>
+        <div class="content-scroll" id="tab-log" style="display: none;">
+          <div class="content-inner"><div id="log-list" class="log-list"></div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Slide Panel -->
+  <div class="slide-overlay" id="slideOverlay" onclick="closePanel()"></div>
+  <div class="slide-panel" id="slidePanel">
+    <div class="slide-header">
+      <div><h3 id="panelTitle">Create Dispatch</h3><div class="slide-header-id" id="panelSubtitle"></div></div>
+      <button class="btn btn-sm btn-ghost" onclick="closePanel()" aria-label="Close"><i class="fa-solid fa-xmark"></i></button>
+    </div>
+    <div class="slide-body" id="slideBody"></div>
+    <div class="slide-footer" id="slideFooter"></div>
+  </div>
+
+  <!-- Tile Picker Modal -->
+  <div class="modal-overlay" id="pickerOverlay" onclick="closePicker(event)"></div>
+  <div class="modal" id="pickerModal" style="max-width:520px;max-height:80vh;">
+    <div class="modal-header"><h3 id="pickerTitle">Select</h3><button class="btn btn-sm btn-ghost" onclick="closePicker()"><i class="fa-solid fa-xmark"></i></button></div>
+    <div class="modal-body">
+      <div class="tile-picker-search" id="pickerSearchWrap"><input type="text" id="pickerSearch" class="input" placeholder="Search..." oninput="filterTiles()" /></div>
+      <div class="tile-grid" id="pickerTiles"></div>
+    </div>
+  </div>
+
+  <!-- Confirmation Modal -->
+  <div class="modal-overlay" id="confirmOverlay"></div>
+  <div class="modal" id="confirmModal">
+    <div class="modal-header"><h3 id="confirmTitle">Confirm</h3><button class="btn btn-sm btn-ghost" onclick="closeConfirm()"><i class="fa-solid fa-xmark"></i></button></div>
+    <div class="modal-body" id="confirmBody"></div>
+    <div class="modal-footer" id="confirmFooter"></div>
+  </div>
+
+<script>
+// ── Data ──
+const TRUCKS = [
+  { id: 'T-05', plate: 'រតនៈ ១២៣៤', defaultRoute: 'R-A', defaultDriver: 'D01' },
+  { id: 'T-06', plate: 'កម្ពុជា ៥៦៧៨', defaultRoute: 'R-B', defaultDriver: 'D02' },
+  { id: 'T-07', plate: 'សាសនា ៩០១២', defaultRoute: 'R-C', defaultDriver: 'D03' }
+];
+const DRIVERS = [
+  { id: 'D01', nameEn: 'Sok Vanna', nameKm: 'សុខ វណ្ណា' },
+  { id: 'D02', nameEn: 'Chea Dara', nameKm: 'ជា តារា' },
+  { id: 'D03', nameEn: 'Pho Sophan', nameKm: 'ភិ សុផាន' },
+  { id: 'D04', nameEn: 'Kim Heng', nameKm: 'គីម ហេង' }
+];
+const ROUTES = [
+  { id: 'R-A', nameEn: 'Route A — South', nameKm: 'ផ្លូវ A' },
+  { id: 'R-B', nameEn: 'Route B — North', nameKm: 'ផ្លូវ B' },
+  { id: 'R-C', nameEn: 'Route C — East', nameKm: 'ផ្លូវ C' }
+];
+const PRODUCTS = [
+  { id: 'ICE-BLK', nameEn: 'Block Ice', nameKm: 'ទឹកកកដុំ', unit: 'block' },
+  { id: 'ICE-TB-BG', nameEn: 'Big Tube', nameKm: 'បំពង់ធំ', unit: 'tube' },
+  { id: 'ICE-TB-SM', nameEn: 'Small Tube', nameKm: 'បំពង់តូច', unit: 'tube' }
+];
+
+let PLANS = [
+  { id: 'DP-260921001', date: '2026-09-21', departure: '08:30', truck: 'T-05', driver: 'D01', route: 'R-A', salesperson: 'D02', backupDriver: '', method: 'driver', quantities: { 'ICE-BLK': 120, 'ICE-TB-BG': 80, 'ICE-TB-SM': 200 }, status: 'created', recordedBy: 'admin', reprintCount: 0 },
+  { id: 'DP-260921002', date: '2026-09-21', departure: '06:00', truck: 'T-06', driver: 'D02', route: 'R-B', salesperson: 'D03', backupDriver: 'D04', method: 'order', orders: [{ customer: 'Customer A', product: 'ICE-BLK', qty: 50 }, { customer: 'Customer B', product: 'ICE-TB-SM', qty: 100 }], status: 'dispatched', recordedBy: 'admin', reprintCount: 1 }
+];
+
+let ACTIVITY_LOG = [
+  { type: 'create', icon: 'fa-plus', time: '21 Sep 2026 · 08:32', user: 'admin', text: 'DP-260921001 created (Driver-requested, 400 units)' },
+  { type: 'print', icon: 'fa-print', time: '21 Sep 2026 · 08:35', user: 'admin', text: 'Receipt printed (1st copy)' },
+  { type: 'create', icon: 'fa-plus', time: '20 Sep 2026 · 09:00', user: 'admin', text: 'DP-260921002 created (Customer orders, 150 units)' },
+  { type: 'print', icon: 'fa-print', time: '20 Sep 2026 · 09:01', user: 'admin', text: 'Receipt printed (1st copy)' }
+];
+
+let currentLang = 'en';
+let currentTab = 'plans';
+let panelFormData = null;
+let panelSaving = false;
+let pickerState = null;
+
+const T = {
+  en: {
+    createDispatch: 'Create Dispatch', plans: 'Plans', activityLog: 'Activity Log',
+    truck: 'Truck', driver: 'Driver', route: 'Route', date: 'Date', departure: 'Departure',
+    total: 'Total', status: 'Status', created: 'Created', dispatched: 'Dispatched', returned: 'Returned',
+    salesperson: 'Salesperson', recordedBy: 'Recorded by', method: 'Method', backup: 'Backup',
+    driverReq: 'Driver-requested quantities', customerOrders: 'Customer orders',
+    addOrder: 'Add order', customer: 'Customer', product: 'Product', quantity: 'Quantity',
+    byProductSummary: 'By-product summary', notes: 'Notes / Remarks', notesPlaceholder: 'Describe any issues…',
+    cancel: 'Cancel', confirm: 'Confirm', create: 'Create Dispatch', dispatchBtn: '✓ Dispatch',
+    confirmTitle: 'Confirm Create Dispatch', confirmPrint: 'Confirm & print',
+    successTitle: 'Dispatch Created', successText: '{id} created successfully.',
+    validationTrip: 'Truck, route, and driver are required.',
+    validationQty: 'At least one product quantity must be greater than zero.',
+    noPlans: 'No Plans Yet', noPlansDesc: 'Create your first dispatch plan.',
+    noHistory: 'No History', noHistoryDesc: 'No plans recorded yet.',
+    history: 'History', reprint: 'Reprint', print: 'Print', view: 'View', remove: 'Remove',
+    ordersNote: 'Orders do not guarantee every customer is served.',
+    selectTruck: 'Select Truck', selectDriver: 'Select Driver', selectRoute: 'Select Route',
+    selectBackup: 'Select Backup Driver',
+    none: 'None', inUse: 'In use on {id}',
+    methodSwitchWarn: 'Switching method will clear all entries. Continue?',
+    units: 'units', block: 'Block Ice', bigTube: 'Big Tube', smTube: 'Small Tube'
+  },
+  km: {
+    createDispatch: 'បង្កើតការដឹកជញ្ជូន', plans: 'ផែនការ', activityLog: 'កំណត់ត្រាសកម្មភាព',
+    truck: 'រថយន្ត', driver: 'អ្នកបើកបរ', route: 'ផ្លូវ', date: 'កាលបរិច្ឆេទ', departure: 'ពេលចេញដំណើរ',
+    total: 'សរុប', status: 'ស្ថានភាព', created: 'បានបង្កើត', dispatched: 'បានដឹកជញ្ជូន', returned: 'បានត្រឡប់',
+    salesperson: 'អ្នកលក់', recordedBy: 'កត់ត្រាដោយ', method: 'វិធីសាស្ត្រ', backup: 'បម្រុង',
+    driverReq: 'បរិមាណតាមអ្នកបើកបរ', customerOrders: 'ការបញ្ជាទិញ',
+    addOrder: 'បន្ថែមការបញ្ជាទិញ', customer: 'អតិថិជន', product: 'ផលិតផល', quantity: 'បរិមាណ',
+    byProductSummary: 'សង្ខេបតាមផលិតផល', notes: 'កំណត់ចំណាំ', notesPlaceholder: 'រៀបរាប់បញ្ហា…',
+    cancel: 'បោះបង់', confirm: 'បញ្ជាក់', create: 'បង្កើត', dispatchBtn: '✓ ដឹកជញ្ជូន',
+    confirmTitle: 'បញ្ជាក់ការបង្កើត', confirmPrint: 'បញ្ជាក់ និងបោះពុម្ព',
+    successTitle: 'បានបង្កើត', successText: '{id} ត្រូវបានបង្កើតដោយជោគជ័យ។',
+    validationTrip: 'រថយន្ត ផ្លូវ និងអ្នកបើកបរ ត្រូវបានទាមទារ។',
+    validationQty: 'យ៉ាងហោចណាស់បរិមាណផលិតផលមួយត្រូវធំជាងសូន្យ។',
+    noPlans: 'មិនទាន់មានផែនការ', noPlansDesc: 'បង្កើតផែនការដំបូងរបស់អ្នក។',
+    noHistory: 'មិនទាន់មានប្រវត្តិ', noHistoryDesc: 'មិនទាន់មានផែនការត្រូវបានកត់ត្រាទេ។',
+    history: 'ប្រវត្តិ', reprint: 'បោះពុម្ពម្តងទៀត', print: 'បោះពុម្ព', view: 'មើល', remove: 'លុប',
+    ordersNote: 'ការបញ្ជាទិញមិនធានាថាអតិថិជននីមួយៗនឹងទទួលបានសេវាកម្មទេ។',
+    selectTruck: 'ជ្រើសរើសរថយន្ត', selectDriver: 'ជ្រើសរើសអ្នកបើកបរ', selectRoute: 'ជ្រើសរើសផ្លូវ',
+    selectBackup: 'ជ្រើសរើសអ្នកបើកបរបម្រុង',
+    none: 'គ្មាន', inUse: 'កំពុងប្រើលើ {id}',
+    methodSwitchWarn: 'ការប្តូរវិធីសាស្ត្រនឹងលុបទិន្នន័យទាំងអស់។ បន្ត?',
+    units: 'ឯកតា', block: 'ទឹកកកដុំ', bigTube: 'បំពង់ធំ', smTube: 'បំពង់តូច'
+  }
+};
+function t(k) { return T[currentLang][k] || T['en'][k] || k; }
+
+function truckLabel(id) { const tr = TRUCKS.find(x => x.id === id); return tr ? tr.id + ' · ' + tr.plate : id; }
+function driverLabel(id) { const d = DRIVERS.find(x => x.id === id); return d ? (currentLang === 'km' ? d.nameKm : d.nameEn) : id; }
+function routeLabel(id) { const r = ROUTES.find(x => x.id === id); return r ? (currentLang === 'km' ? r.nameKm : r.nameEn) : id; }
+function productName(id) { const p = PRODUCTS.find(x => x.id === id); return p ? (currentLang === 'km' ? p.nameKm : p.nameEn) : id; }
+function getMethodTotals(p) { if (p.method === 'driver') return p.quantities || {}; if (p.orders) { const t2 = {}; p.orders.forEach(o => { if (o.product && o.qty) t2[o.product] = (t2[o.product]||0) + o.qty; }); return t2; } return {}; }
+function getTotal(p) { return Object.values(getMethodTotals(p)).reduce((s,v) => s+v, 0); }
+
+function generateId() {
+  const d = new Date();
+  const dateStr = String(d.getFullYear()).slice(2) + String(d.getMonth()+1).padStart(2,'0') + String(d.getDate()).padStart(2,'0');
+  const seq = String(PLANS.length + 1).padStart(3, '0');
+  return 'DP-' + dateStr + seq;
+}
+
+function setLang(lang) {
+  currentLang = lang;
+  document.getElementById('lang-en').classList.toggle('active', lang === 'en');
+  document.getElementById('lang-km').classList.toggle('active', lang === 'km');
+  document.documentElement.lang = lang;
+  document.querySelectorAll('[data-en]').forEach(el => { el.textContent = el.getAttribute('data-' + lang) || el.getAttribute('data-en'); });
+  document.querySelectorAll('[data-en-placeholder]').forEach(el => { el.placeholder = el.getAttribute('data-' + lang + '-placeholder') || el.getAttribute('data-en-placeholder'); });
+  renderCards();
+  renderLog();
+  if (panelFormData) renderPanelBody();
+}
+
+function switchTab(tab) {
+  currentTab = tab;
+  document.querySelectorAll('.tab-line').forEach(el => el.classList.toggle('active', el.getAttribute('data-tab') === tab));
+  document.getElementById('tab-plans').hidden = tab === 'log';
+  document.getElementById('plans-scroll').style.display = tab === 'log' ? 'none' : '';
+  document.getElementById('tab-log').style.display = tab === 'log' ? '' : 'none';
+  renderCards();
+  renderLog();
+}
+
+function filterCards() {
+  const q = (document.getElementById('card-search')?.value || '').toLowerCase();
+  document.querySelectorAll('#plans-list .dispatch-card').forEach(c => { c.hidden = !c.textContent.toLowerCase().includes(q); });
+}
+
+function renderCards() {
+  const list = document.getElementById('plans-list');
+  const plansToShow = currentTab === 'history' ? PLANS : PLANS.filter(p => p.status === 'created');
+  list.classList.toggle('empty-view', !plansToShow.length);
+  if (!plansToShow.length) {
+    const emptyTitle = currentTab === 'history' ? t('noHistory') : t('noPlans');
+    const emptyDesc = currentTab === 'history' ? t('noHistoryDesc') : t('noPlansDesc');
+    list.innerHTML = '<div class="empty-state"><div class="empty-icon"><i class="fa-solid fa-clipboard-list"></i></div><div class="empty-title">'+emptyTitle+'</div><div class="empty-desc">'+emptyDesc+'</div></div>';
+    return;
+  }
+  list.classList.remove('empty-view');
+  let html = '';
+  plansToShow.forEach(p => {
+    const total = getTotal(p);
+    const sc = p.status === 'dispatched' ? 'status-dispatched' : p.status === 'returned' ? 'status-returned' : 'status-created';
+    const methodLabel = p.method === 'driver' ? t('driverReq') : t('customerOrders');
+    const backupLabel = p.backupDriver ? driverLabel(p.backupDriver) : '';
+    html += '<div class="dispatch-card">';
+    html += '<div class="dispatch-card-header"><div><div class="dispatch-card-id">'+p.id+'</div><div style="font-size:var(--text-sm);color:var(--fg-muted)">'+p.date+' · '+p.departure+'</div></div>';
+    html += '<span class="status-badge '+sc+'"><i class="fa-solid fa-circle" style="font-size:5px"></i> '+t(p.status)+'</span></div>';
+    html += '<div class="dispatch-card-meta">';
+    html += '<div><span class="dispatch-card-meta-label">'+t('truck')+'</span><span class="dispatch-card-meta-value">'+truckLabel(p.truck)+'</span></div>';
+    html += '<div><span class="dispatch-card-meta-label">'+t('driver')+'</span><span class="dispatch-card-meta-value">'+driverLabel(p.driver)+'</span></div>';
+    html += '<div><span class="dispatch-card-meta-label">'+t('route')+'</span><span class="dispatch-card-meta-value">'+routeLabel(p.route)+'</span></div>';
+    html += '<div><span class="dispatch-card-meta-label">'+t('method')+'</span><span class="dispatch-card-meta-value">'+methodLabel+'</span></div>';
+    html += '<div><span class="dispatch-card-meta-label">'+t('total')+'</span><span class="dispatch-card-meta-value" style="font-family:var(--font-mono);font-weight:600">'+total+'</span> '+t('units')+'</div>';
+    if (backupLabel) html += '<div><span class="dispatch-card-meta-label">'+t('backup')+'</span><span class="dispatch-card-meta-value">'+backupLabel+'</span></div>';
+    html += '</div><div class="dispatch-card-footer">';
+    html += '<button class="btn btn-secondary btn-sm" onclick="printCard(\''+p.id+'\')"><i class="fa-solid fa-print"></i> '+(p.reprintCount>0?t('reprint')+' #'+(p.reprintCount+1):t('print'))+'</button>';
+    html += '<button class="btn btn-sm" style="color:var(--fg-muted)" onclick="openCreatePanel(\''+p.id+'\')"><i class="fa-solid fa-eye"></i> '+t('view')+'</button>';
+    html += '</div></div>';
+  });
+  list.innerHTML = html;
+}
+
+function renderLog() {
+  const c = document.getElementById('log-list');
+  let html = '';
+  ACTIVITY_LOG.forEach(l => {
+    html += '<div class="log-item"><div class="log-dot '+l.type+'"></div><div class="log-content"><div class="log-title">'+l.text+'</div><div class="log-meta">'+l.time+' · '+l.user+'</div></div></div>';
+  });
+  c.innerHTML = html;
+}
+
+function printCard(id) {
+  const p = PLANS.find(x => x.id === id);
+  if (!p) return;
+  p.reprintCount = (p.reprintCount || 0) + 1;
+  ACTIVITY_LOG.unshift({ type: 'print', time: 'Just now · admin', user: 'admin', text: 'Receipt reprinted for '+id+' (REPRINT #'+p.reprintCount+')' });
+  showToast('success', t('print'), id+' - '+(p.reprintCount>1?'REPRINT #'+p.reprintCount:'1st copy'));
+  renderCards();
+  renderLog();
+}
+
+// ── Tile Picker ──
+function openPicker(config) {
+  pickerState = config;
+  document.getElementById('pickerTitle').textContent = config.title;
+  document.getElementById('pickerSearch').value = '';
+  renderTiles();
+  document.getElementById('pickerOverlay').classList.add('open');
+  document.getElementById('pickerModal').classList.add('open');
+}
+
+function closePicker(e) {
+  if (e && e.target !== document.getElementById('pickerOverlay')) return;
+  document.getElementById('pickerOverlay').classList.remove('open');
+  document.getElementById('pickerModal').classList.remove('open');
+  pickerState = null;
+}
+
+function filterTiles() { renderTiles(); }
+
+function renderTiles() {
+  const config = pickerState;
+  if (!config) return;
+  const search = (document.getElementById('pickerSearch')?.value || '').toLowerCase();
+  const grid = document.getElementById('pickerTiles');
+  let tiles = config.options || [];
+  if (search) tiles = tiles.filter(o => (o.name+' '+(o.context||'')).toLowerCase().includes(search));
+  let html = '';
+  tiles.forEach(o => {
+    const disabled = o.disabled ? ' disabled' : '';
+    const selected = o.selected ? ' selected' : '';
+    const reason = o.disabledReason ? '<div class="tile-context" style="color:var(--danger-fg)">'+o.disabledReason+'</div>' : '';
+    html += '<div class="tile'+selected+disabled+'" onclick="'+(o.disabled?'':'selectPickerOption(\''+o.id+'\')')+'"><div class="tile-name">'+o.name+'</div>'+(o.context?'<div class="tile-context">'+o.context+'</div>':'')+reason+'</div>';
+  });
+  grid.innerHTML = html;
+}
+
+function selectPickerOption(id) {
+  if (pickerState.onSelect) pickerState.onSelect(id);
+  closePicker();
+}
+
+// ── Panel ──
+function openCreatePanel(id) {
+  const existing = id ? PLANS.find(p => p.id === id) : null;
+  panelFormData = {
+    id: existing ? existing.id : generateId(),
+    date: existing ? existing.date : new Date().toISOString().slice(0,10),
+    departure: existing ? existing.departure : '08:00',
+    truck: existing ? existing.truck : '',
+    driver: existing ? existing.driver : '',
+    route: existing ? existing.route : '',
+    salesperson: existing ? existing.salesperson : '',
+    backupDriver: existing ? (existing.backupDriver || '') : '',
+    method: existing ? existing.method : 'driver',
+    quantities: existing && existing.quantities ? {...existing.quantities} : {'ICE-BLK':0,'ICE-TB-BG':0,'ICE-TB-SM':0},
+    orders: existing && existing.orders ? existing.orders.map(o => ({...o})) : [],
+    notes: '',
+    recordedBy: existing ? existing.recordedBy : 'admin'
+  };
+  panelSaving = false;
+  document.getElementById('panelTitle').textContent = t('createDispatch');
+  document.getElementById('panelSubtitle').textContent = panelFormData.id;
+  document.getElementById('slideOverlay').classList.add('open');
+  document.getElementById('slidePanel').classList.add('open');
+  renderPanelBody();
+  renderPanelFooter();
+}
+
+function closePanel() {
+  document.getElementById('slideOverlay').classList.remove('open');
+  document.getElementById('slidePanel').classList.remove('open');
+  panelFormData = null;
+  panelSaving = false;
+}
+
+function renderPanelBody() {
+  const d = panelFormData;
+
+  function pickerButton(field, label, value, openFn) {
+    const display = value ? (field === 'backupDriver' && !value ? t('none') : field === 'truck' ? truckLabel(value) : field === 'driver' ? driverLabel(value) : field === 'route' ? routeLabel(value) : field === 'salesperson' ? driverLabel(value) : value) : '--';
+    return '<div class="field-section"><label class="field-label">'+label+'</label><button class="picker-field'+(value?' has-value':'')+'" onclick="'+openFn+'">'+display+'<i class="fa-solid fa-grid picker-icon"></i></button></div>';
+  }
+
+  let html = '';
+  html += pickerButton('date', t('date'), d.date, '');
+  html += '<input type="date" class="picker-field" value="'+d.date+'" onchange="panelFormData.date=this.value" style="margin-top:var(--space-2)" />';
+
+  html += '<div class="field-section"><label class="field-label">'+t('departure')+'</label><input type="time" class="picker-field" value="'+d.departure+'" onchange="panelFormData.departure=this.value" /></div>';
+
+  html += '<div class="field-section"><div class="field-section-title">Trip</div></div>';
+  html += pickerButton('truck', t('truck'), d.truck, 'openTruckPicker()');
+  html += pickerButton('route', t('route')+' (auto-filled)', d.route, 'openRoutePicker()');
+  html += pickerButton('driver', t('driver')+' (usual)', d.driver, 'openDriverPicker()');
+  html += pickerButton('backupDriver', t('backup')+' ('+t('none')+' default)', d.backupDriver, 'openBackupPicker()');
+
+  html += '<div class="field-section"><label class="field-label">'+t('recordedBy')+'</label><input type="text" class="picker-field" value="'+d.recordedBy+'" readonly style="background:var(--bg);color:var(--fg-muted)" /></div>';
+
+  html += '<div class="field-section"><div class="field-section-title">'+t('method')+'</div>';
+  html += '<div class="segmented"><button class="'+(d.method==='driver'?'active':'')+'" onclick="setMethod(\'driver\')">'+t('driverReq')+'</button><button class="'+(d.method==='order'?'active':'')+'" onclick="setMethod(\'order\')">'+t('customerOrders')+'</button></div></div>';
+
+  if (d.method === 'driver') {
+    html += '<div class="field-section"><div class="field-section-title">'+t('driverReq')+'</div>';
+    PRODUCTS.forEach(pr => {
+      html += '<div class="qty-row"><span style="font-weight:500">'+productName(pr.id)+'</span><div style="display:flex;align-items:center;gap:8px"><input type="number" class="qty-input" min="0" value="'+(d.quantities[pr.id]||0)+'" oninput="panelFormData.quantities[\''+pr.id+'\']=Math.max(0,parseInt(this.value)||0)"><span style="font-size:var(--text-sm);color:var(--fg-muted)">'+pr.unit+'</span></div></div>';
+    });
+    html += '</div>';
+  } else {
+    html += '<div class="field-section"><div class="field-section-title">'+t('customerOrders')+'</div>';
+    d.orders.forEach((o, i) => {
+      html += '<div style="display:grid;grid-template-columns:1fr 130px 80px 36px;gap:var(--space-2);align-items:end;margin-bottom:8px">';
+      html += '<div><label class="field-label">'+t('customer')+'</label><input type="text" class="input" value="'+o.customer+'" oninput="panelFormData.orders['+i+'].customer=this.value" /></div>';
+      html += '<div><label class="field-label">'+t('product')+'</label><select class="input" onchange="panelFormData.orders['+i+'].product=this.value"><option value="">--</option>'+PRODUCTS.map(p => '<option value="'+p.id+'"'+(o.product===p.id?' selected="selected"':'')+'>'+productName(p.id)+'</option>').join('')+'</select></div>';
+      html += '<div><label class="field-label">'+t('quantity')+'</label><input type="number" class="input" style="text-align:right" min="0" value="'+o.qty+'" oninput="panelFormData.orders['+i+'].qty=Math.max(0,parseInt(this.value)||0)" /></div>';
+      html += '<button class="btn btn-ghost" onclick="removeOrder('+i+')"'+(d.orders.length<=1?' disabled style="opacity:.3"':'')+'><i class="fa-solid fa-trash-can"></i></button></div>';
+    });
+    html += '<button class="btn btn-secondary btn-sm" onclick="addOrder()"><i class="fa-solid fa-plus"></i> '+t('addOrder')+'</button>';
+    const summary = computeOrderSummary(d.orders);
+    if (summary.length) {
+      html += '<div class="order-summary"><div class="order-summary-title">'+t('byProductSummary')+'</div>';
+      summary.forEach(s => { html += '<div class="order-summary-row"><span>'+productName(s.id)+'</span><span style="font-family:var(--font-mono);font-weight:600">'+s.qty+'</span></div>'; });
+      html += '</div>';
+    }
+    html += '<p style="font-size:var(--text-sm);color:var(--fg-muted);margin-top:var(--space-3)"><i class="fa-solid fa-circle-info" style="font-size:10px"></i> '+t('ordersNote')+'</p></div>';
+  }
+
+  document.getElementById('slideBody').innerHTML = html;
+}
+
+function computeOrderSummary(orders) {
+  const totals = {};
+  orders.forEach(o => { if (o.product && o.qty) totals[o.product] = (totals[o.product]||0) + o.qty; });
+  return Object.entries(totals).map(([id, qty]) => ({id, qty}));
+}
+
+function openTruckPicker() {
+  openPicker({
+    title: t('selectTruck'),
+    options: TRUCKS.map(tr => ({ id: tr.id, name: tr.id + ' · ' + tr.plate, context: driverLabel(tr.defaultDriver) })),
+    onSelect(id) { const tr = TRUCKS.find(t => t.id === id); panelFormData.truck = id; panelFormData.route = tr.defaultRoute; panelFormData.driver = tr.defaultDriver; renderPanelBody(); }
+  });
+}
+
+function openRoutePicker() {
+  openPicker({
+    title: t('selectRoute'),
+    options: ROUTES.map(r => ({ id: r.id, name: (currentLang==='km'?r.nameKm:r.nameEn) })),
+    onSelect(id) { panelFormData.route = id; renderPanelBody(); }
+  });
+}
+
+function openDriverPicker() {
+  openPicker({
+    title: t('selectDriver'),
+    options: DRIVERS.map(d => ({ id: d.id, name: (currentLang==='km'?d.nameKm:d.nameEn) })),
+    onSelect(id) { panelFormData.driver = id; renderPanelBody(); }
+  });
+}
+
+function openSalespersonPicker() {
+  openPicker({
+    title: t('selectSalesperson'),
+    options: DRIVERS.map(d => ({ id: d.id, name: (currentLang==='km'?d.nameKm:d.nameEn) })),
+    onSelect(id) { panelFormData.salesperson = id; renderPanelBody(); }
+  });
+}
+
+function openBackupPicker() {
+  openPicker({
+    title: t('selectBackup'),
+    options: [{ id: '', name: t('none'), context: 'Default' }, ...DRIVERS.map(d => ({ id: d.id, name: (currentLang==='km'?d.nameKm:d.nameEn) }))],
+    onSelect(id) { panelFormData.backupDriver = id; renderPanelBody(); }
+  });
+}
+
+function setMethod(m) {
+  if (panelFormData.method === m) return;
+  if (Object.values(panelFormData.quantities).some(v=>v>0) || panelFormData.orders.length>0) {
+    if (!confirm(t('methodSwitchWarn'))) return;
+  }
+  panelFormData.method = m;
+  if (m === 'order') panelFormData.quantities = {'ICE-BLK':0,'ICE-TB-BG':0,'ICE-TB-SM':0};
+  else panelFormData.orders = [];
+  renderPanelBody();
+}
+
+function addOrder() { panelFormData.orders.push({customer:'',product:'',qty:0}); renderPanelBody(); }
+function removeOrder(i) { if (panelFormData.orders.length>1) { panelFormData.orders.splice(i,1); renderPanelBody(); } }
+
+function renderPanelFooter() {
+  document.getElementById('slideFooter').innerHTML = '<button class="btn btn-secondary" onclick="closePanel()">'+t('cancel')+'</button><button class="btn btn-primary" id="btn-submit" onclick="submitPanel()"'+(panelSaving?' disabled style="opacity:.5"':'')+'>'+t('dispatchBtn')+'</button>';
+}
+
+function submitPanel() {
+  if (panelSaving) return;
+  const d = panelFormData;
+  if (!d.truck || !d.route || !d.driver) { showToast('danger', t('validationContext'), t('validationTrip')); return; }
+  let methodOk = false;
+  if (d.method === 'driver') methodOk = Object.values(d.quantities).some(v=>v>0);
+  else methodOk = d.orders.some(o => o.customer && o.product && o.qty>0);
+  if (!methodOk) { showToast('danger', t('validationQty'), t('validationQty')); return; }
+  openConfirmModal();
+}
+
+function openConfirmModal() {
+  const d = panelFormData;
+  const totals = d.method === 'driver' ? {...d.quantities} : {};
+  if (d.method === 'order') d.orders.forEach(o => { if (o.product && o.qty) totals[o.product] = (totals[o.product]||0) + o.qty; });
+  const totalUnits = Object.values(totals).reduce((s,v) => s+v, 0);
+
+  let receiptHtml = '<div class="receipt"><div class="receipt-header"><div class="receipt-factory">SOKHENG ICE FACTORY</div><div class="receipt-title">DISPATCH RECEIPT</div><div class="receipt-id">'+d.id+'</div><div class="receipt-date">'+d.date+' · '+d.departure+'</div></div>';
+  receiptHtml += '<div class="receipt-row"><span class="label">'+t('truck')+'</span><span>'+truckLabel(d.truck)+'</span></div>';
+  receiptHtml += '<div class="receipt-row"><span class="label">'+t('route')+'</span><span>'+routeLabel(d.route)+'</span></div>';
+  receiptHtml += '<div class="receipt-row"><span class="label">'+t('driver')+'</span><span>'+driverLabel(d.driver)+' (usual)</span></div>';
+  if (d.backupDriver) receiptHtml += '<div class="receipt-row"><span class="label">'+t('backup')+'</span><span>'+driverLabel(d.backupDriver)+'</span></div>';
+  if (d.salesperson) receiptHtml += '<div class="receipt-row"><span class="label">'+t('salesperson')+'</span><span>'+driverLabel(d.salesperson)+'</span></div>';
+  receiptHtml += '<div class="receipt-row"><span class="label">'+t('method')+'</span><span>'+(d.method==='driver'?t('driverReq'):t('customerOrders'))+'</span></div>';
+  receiptHtml += '<div class="receipt-products"><div class="receipt-products-title">Product totals</div>';
+  PRODUCTS.forEach(pr => { if (totals[pr.id]) receiptHtml += '<div class="receipt-row"><span class="label">'+productName(pr.id)+'</span><span>'+totals[pr.id]+'</span></div>'; });
+  receiptHtml += '<div class="receipt-row" style="border-top:1px solid var(--border);margin-top:4px;padding-top:4px;font-weight:700"><span class="label">'+t('total')+'</span><span>'+totalUnits+' '+t('units')+'</span></div></div>';
+  receiptHtml += '<div class="receipt-footer">'+t('recordedBy')+': '+d.recordedBy+'</div></div>';
+
+  document.getElementById('confirmTitle').textContent = t('confirmTitle');
+  document.getElementById('confirmBody').innerHTML = receiptHtml;
+  document.getElementById('confirmFooter').innerHTML = '<button class="btn btn-secondary" onclick="closeConfirm()">'+t('cancel')+'</button><button class="btn btn-primary" id="btn-confirm" onclick="confirmSave()"><i class="fa-solid fa-print"></i> '+t('confirmPrint')+'</button>';
+  document.getElementById('confirmOverlay').classList.add('open');
+  document.getElementById('confirmModal').classList.add('open');
+}
+
+function closeConfirm() { document.getElementById('confirmOverlay').classList.remove('open'); document.getElementById('confirmModal').classList.remove('open'); }
+
+function confirmSave() {
+  const btn = document.getElementById('btn-confirm');
+  panelSaving = true;
+  btn.disabled = true;
+  btn.innerHTML = '<i class="fa-solid fa-spinner" style="animation:spin 1s linear infinite"></i> '+t('confirmPrint');
+  setTimeout(() => {
+    const d = panelFormData;
+    const totals = d.method === 'driver' ? {...d.quantities} : {};
+    if (d.method === 'order') d.orders.forEach(o => { if (o.product && o.qty) totals[o.product] = (totals[o.product]||0) + o.qty; });
+    const newPlan = { id: d.id, date: d.date, departure: d.departure, truck: d.truck, driver: d.driver, route: d.route, salesperson: d.salesperson, backupDriver: d.backupDriver || '', method: d.method, quantities: d.method === 'driver' ? {...d.quantities} : null, orders: d.method === 'order' ? d.orders.filter(o => o.customer && o.product) : null, status: 'created', recordedBy: d.recordedBy, reprintCount: 0 };
+    const idx = PLANS.findIndex(p => p.id === d.id);
+    if (idx >= 0) PLANS[idx] = newPlan; else PLANS.unshift(newPlan);
+    ACTIVITY_LOG.unshift({ type: 'create', time: 'Just now', user: d.recordedBy, text: d.id+' created ('+(d.method==='driver'?t('driverReq'):t('customerOrders')+', '+Object.values(totals).reduce((s,v)=>s+v,0)+' '+t('units'))+')' });
+    ACTIVITY_LOG.unshift({ type: 'print', time: 'Just now', user: d.recordedBy, text: 'Receipt printed (1st copy)' });
+    closeConfirm();
+    closePanel();
+    renderCards();
+    renderLog();
+    showToast('success', t('successTitle'), t('successText').replace('{id}', d.id));
+    panelSaving = false;
+  }, 1200);
+}
+
+function showToast(type, title, text) {
+  const old = document.querySelector('.toast-msg'); if (old) old.remove();
+  const el = document.createElement('div');
+  el.className = 'toast-msg '+type;
+  const icon = type === 'success' ? 'fa-circle-check' : 'fa-circle-exclamation';
+  el.innerHTML = '<div style="font-size:18px;flex-shrink:0;padding-top:2px"><i class="fa-solid '+icon+'"></i></div><div style="flex:1"><div style="font-weight:600;font-size:14px">'+title+'</div><div style="font-size:13px;opacity:.85;margin-top:4px">'+text+'</div></div><button style="background:none;border:none;color:inherit;opacity:.5;font-size:18px;cursor:pointer;padding:4px"><i class="fa-solid fa-xmark"></i></button>';
+  document.body.appendChild(el);
+  el.querySelector('button').onclick = () => el.remove();
+  if (window._toast) clearTimeout(window._toast);
+  window._toast = setTimeout(() => el.remove(), 5000);
+}
+
+document.addEventListener('keydown', function(e) {
+  if (e.key !== 'Escape') return;
+  if (document.getElementById('confirmModal').classList.contains('open')) return closeConfirm();
+  if (document.getElementById('pickerModal').classList.contains('open')) return closePicker();
+  if (document.getElementById('slidePanel').classList.contains('open')) closePanel();
+});
+
+renderCards();
+renderLog();
+</script>
+</body>
+</html>

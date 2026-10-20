@@ -1,0 +1,22 @@
+{
+  "schemaVersion": 2,
+  "fileName": "references/legacy-prototype/dispatch-ice-return-3.html",
+  "currentVersionId": "12cbf6cc-02d1-4f02-be8f-dca88be9e788",
+  "entries": [
+    {
+      "id": "12cbf6cc-02d1-4f02-be8f-dca88be9e788",
+      "fileName": "references/legacy-prototype/dispatch-ice-return-3.html",
+      "version": 1,
+      "label": "Version 1",
+      "createdAt": 1790404364994,
+      "source": "ai",
+      "prompt": "let's do it",
+      "size": 4774,
+      "mime": "text/html; charset=utf-8",
+      "kind": "html",
+      "contentPath": "0001-12cbf6cc-02d1-4f02-be8f-dca88be9e788.html",
+      "contentDigest": "9a7510b4599f17d5adf5e4bb2984a66d848fc2bcb47e42ee5097a098cc3bea62",
+      "promptSource": "message"
+    }
+  ]
+}

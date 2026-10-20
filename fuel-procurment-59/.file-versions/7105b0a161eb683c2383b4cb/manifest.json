@@ -1,0 +1,22 @@
+{
+  "schemaVersion": 2,
+  "fileName": "references/legacy-prototype/debt-collection.html",
+  "currentVersionId": "28180604-ecc5-4edd-b9b7-70c5e2b84413",
+  "entries": [
+    {
+      "id": "28180604-ecc5-4edd-b9b7-70c5e2b84413",
+      "fileName": "references/legacy-prototype/debt-collection.html",
+      "version": 1,
+      "label": "Version 1",
+      "createdAt": 1790404364994,
+      "source": "ai",
+      "prompt": "let's do it",
+      "size": 4924,
+      "mime": "text/html; charset=utf-8",
+      "kind": "html",
+      "contentPath": "0001-28180604-ecc5-4edd-b9b7-70c5e2b84413.html",
+      "contentDigest": "4b7ed75eabf6e1645adb86db42e2b1628079af9ecf8a1002a080e0f9806f051c",
+      "promptSource": "message"
+    }
+  ]
+}

@@ -1,0 +1,22 @@
+{
+  "schemaVersion": 2,
+  "fileName": "app/index.html",
+  "currentVersionId": "36ee585d-07df-4af2-b314-1c7ccc5585a8",
+  "entries": [
+    {
+      "id": "36ee585d-07df-4af2-b314-1c7ccc5585a8",
+      "fileName": "app/index.html",
+      "version": 1,
+      "label": "Version 1",
+      "createdAt": 1790404364993,
+      "source": "ai",
+      "prompt": "let's do it",
+      "size": 481,
+      "mime": "text/html; charset=utf-8",
+      "kind": "html",
+      "contentPath": "0001-36ee585d-07df-4af2-b314-1c7ccc5585a8.html",
+      "contentDigest": "34e186c8ed68f427068f632ba835f3de93d87dc95849821fdc5f63b2ce1dca8c",
+      "promptSource": "message"
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "version": 1,
+  "kind": "html",
+  "title": "fuel-approvals.html",
+  "entry": "fuel-approvals.html",
+  "renderer": "html",
+  "status": "complete",
+  "exports": [
+    "html",
+    "pdf",
+    "zip"
+  ],
+  "createdAt": "2026-10-01T06:41:28.612Z",
+  "updatedAt": "2026-10-01T06:41:28.612Z",
+  "metadata": {
+    "inferred": true,
+    "reconciled": true
+  }
+}

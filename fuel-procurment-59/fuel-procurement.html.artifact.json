@@ -1,0 +1,19 @@
+{
+  "version": 1,
+  "kind": "html",
+  "title": "fuel-procurement.html",
+  "entry": "fuel-procurement.html",
+  "renderer": "html",
+  "status": "complete",
+  "exports": [
+    "html",
+    "pdf",
+    "zip"
+  ],
+  "createdAt": "2026-10-01T01:56:27.260Z",
+  "updatedAt": "2026-10-01T01:56:27.260Z",
+  "metadata": {
+    "inferred": true,
+    "reconciled": true
+  }
+}

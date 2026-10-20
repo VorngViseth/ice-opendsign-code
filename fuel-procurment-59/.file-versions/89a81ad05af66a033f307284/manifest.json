@@ -1,0 +1,22 @@
+{
+  "schemaVersion": 2,
+  "fileName": "backups/pre-rollback-react/driver-sales.html",
+  "currentVersionId": "ab2488b0-a09d-4901-8b10-02f627ba46eb",
+  "entries": [
+    {
+      "id": "ab2488b0-a09d-4901-8b10-02f627ba46eb",
+      "fileName": "backups/pre-rollback-react/driver-sales.html",
+      "version": 1,
+      "label": "Version 1",
+      "createdAt": 1790563470152,
+      "source": "ai",
+      "prompt": "before react typescript",
+      "size": 579,
+      "mime": "text/html; charset=utf-8",
+      "kind": "html",
+      "contentPath": "0001-ab2488b0-a09d-4901-8b10-02f627ba46eb.html",
+      "contentDigest": "4243a5b1cbffb08727741261a07f564140c142dae3fdc85dcbefb7f886836819",
+      "promptSource": "message"
+    }
+  ]
+}

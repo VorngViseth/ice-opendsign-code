@@ -1,0 +1,22 @@
+{
+  "schemaVersion": 2,
+  "fileName": "home.html",
+  "currentVersionId": "eb011259-7b43-4e3e-ba24-3cdeb4320b12",
+  "entries": [
+    {
+      "id": "eb011259-7b43-4e3e-ba24-3cdeb4320b12",
+      "fileName": "home.html",
+      "version": 1,
+      "label": "Version 1",
+      "createdAt": 1791189644892,
+      "source": "ai",
+      "prompt": "feedback: \n- hide description text on the card at home page under information icon. see for example the icon at the title at the dialy finance page",
+      "size": 3813,
+      "mime": "text/html; charset=utf-8",
+      "kind": "html",
+      "contentPath": "0001-eb011259-7b43-4e3e-ba24-3cdeb4320b12.html",
+      "contentDigest": "7871dd0c03db35b4bb7ba20270232ebc5beac3d39546286c860fa175fe695f9c",
+      "promptSource": "message"
+    }
+  ]
+}

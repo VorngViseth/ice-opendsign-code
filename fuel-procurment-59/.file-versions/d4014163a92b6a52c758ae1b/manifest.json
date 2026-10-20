@@ -1,0 +1,22 @@
+{
+  "schemaVersion": 2,
+  "fileName": "references/teammate-dispatch/dispatch-planning.html",
+  "currentVersionId": "8e6c28ac-9f5b-4a04-a0e8-40053604b046",
+  "entries": [
+    {
+      "id": "8e6c28ac-9f5b-4a04-a0e8-40053604b046",
+      "fileName": "references/teammate-dispatch/dispatch-planning.html",
+      "version": 1,
+      "label": "Version 1",
+      "createdAt": 1790328327751,
+      "source": "ai",
+      "prompt": "this is a good first step but it kinda overlap with other screen handled by my teammate, let have them all here and perform an assessment",
+      "size": 54088,
+      "mime": "text/html; charset=utf-8",
+      "kind": "html",
+      "contentPath": "0001-8e6c28ac-9f5b-4a04-a0e8-40053604b046.html",
+      "contentDigest": "107cb5c66566ad87e793474727582f10dc8afe8cce4870fa4e6167c19248aaad",
+      "promptSource": "message"
+    }
+  ]
+}

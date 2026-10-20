@@ -1,0 +1,22 @@
+{
+  "schemaVersion": 2,
+  "fileName": "references/legacy-prototype/dispatch-planning.html",
+  "currentVersionId": "18b3339a-f787-4424-a702-aa0a8321b602",
+  "entries": [
+    {
+      "id": "18b3339a-f787-4424-a702-aa0a8321b602",
+      "fileName": "references/legacy-prototype/dispatch-planning.html",
+      "version": 1,
+      "label": "Version 1",
+      "createdAt": 1790404364994,
+      "source": "ai",
+      "prompt": "let's do it",
+      "size": 4779,
+      "mime": "text/html; charset=utf-8",
+      "kind": "html",
+      "contentPath": "0001-18b3339a-f787-4424-a702-aa0a8321b602.html",
+      "contentDigest": "4981e0489d57eace3371b581c9a416861dfbefa4b3025509b3304658268fc166",
+      "promptSource": "message"
+    }
+  ]
+}

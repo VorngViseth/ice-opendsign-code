@@ -1,0 +1,883 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Verify Dispatch — Sok Heng Ice Factory</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Hanuman:wght@400;700;900&family=Hanken+Grotesk:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <style>
+    :root {
+      --bg: #f8fafc; --surface: #fff; --surface-hover: #f1f5f9;
+      --fg: #1e293b; --fg-muted: #64748b; --fg-subtle: #94a3b8;
+      --border: #e2e8f0; --border-strong: #cbd5e1;
+      --accent-50: #eef7f9; --accent-100: #d4ecef;
+      --accent-500: #0d7c90; --accent-600: #0a6b7d; --accent-700: #085563;
+      --success: #10b981; --success-bg: #ecfdf5; --success-fg: #059669;
+      --warning: #f59e0b; --warning-bg: #fffbeb; --warning-fg: #d97706;
+      --danger: #ef4444; --danger-bg: #fef2f2; --danger-fg: #dc2626;
+      --info: #3b82f6; --info-bg: #eff6ff; --info-fg: #2563eb;
+      --amber: #f59e0b; --amber-bg: #fffbeb; --amber-fg: #d97706;
+      --green: #10b981; --green-bg: #ecfdf5; --green-fg: #059669;
+      --font-primary: 'Hanken Grotesk', 'Hanuman', ui-sans-serif, system-ui, sans-serif;
+      --font-mono: ui-monospace, 'SF Mono', 'Cascadia Code', monospace;
+      --text-xs: 10px; --text-sm: 12px; --text-base: 14px; --text-lg: 16px;
+      --text-xl: 18px; --text-2xl: 20px; --text-3xl: 24px;
+      --space-1: 4px; --space-2: 8px; --space-3: 12px; --space-4: 16px;
+      --space-5: 20px; --space-6: 24px; --space-8: 32px;
+      --radius-sm: 6px; --radius-md: 8px; --radius-lg: 12px; --radius-full: 9999px;
+      --shadow-sm: 0 1px 2px rgba(0,0,0,.04);
+      --shadow-md: 0 4px 6px -1px rgba(0,0,0,.05), 0 2px 4px -1px rgba(0,0,0,.03);
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body { height: 100%; }
+    body { margin: 0; background: var(--bg); color: var(--fg); font-family: var(--font-primary); font-size: var(--text-base); line-height: 1.5; -webkit-font-smoothing: antialiased; }
+    button { font: inherit; cursor: pointer; border: none; background: none; }
+    input, select, textarea { font: inherit; }
+    @media (prefers-reduced-motion: reduce) { *, *::before, *::after { transition-duration: .01ms !important; animation-duration: .01ms !important; } }
+    [hidden] { display: none !important; }
+
+    .app-shell { display: flex; height: 100%; overflow: hidden; }
+    .sidebar-ph { width: 256px; background: var(--surface); border-right: 1px solid var(--border); flex-shrink: 0; display: flex; align-items: center; justify-content: center; padding: var(--space-4); }
+    .sidebar-ph-label { font-size: var(--text-xs); font-weight: 600; text-transform: uppercase; letter-spacing: .06em; color: var(--fg-subtle); text-align: center; padding: 2rem 1rem; border: 2px dashed var(--border); border-radius: var(--radius-md); white-space: nowrap; }
+    .main-area { flex: 1; display: flex; flex-direction: column; min-width: 0; min-height: 0; }
+    .header-ph { height: 56px; background: var(--surface); border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; padding: 0 var(--space-6); flex-shrink: 0; }
+    .lang-toggle { display: inline-flex; background: var(--bg); border: 1px solid var(--border); border-radius: var(--radius-sm); overflow: hidden; }
+    .lang-toggle button { padding: var(--space-1) var(--space-3); font-size: var(--text-sm); font-weight: 500; color: var(--fg-muted); border-right: 1px solid var(--border); }
+    .lang-toggle button:last-child { border-right: none; }
+    .lang-toggle button.active { background: var(--accent-500); color: #fff; }
+
+    .main-content { flex: 1; display: flex; flex-direction: column; min-height: 0; overflow: hidden; }
+    .content-chrome { flex-shrink: 0; padding: var(--space-6) var(--space-8) 0; max-width: 960px; width: 100%; margin: 0 auto; }
+    .content-scroll { flex: 1; overflow-y: auto; padding: var(--space-4) var(--space-8) var(--space-8); }
+    .content-inner { max-width: 960px; width: 100%; margin: 0 auto; }
+
+    .page-header { margin-bottom: var(--space-5); }
+    .page-title { font-size: var(--text-2xl); font-weight: 700; }
+    .page-desc { font-size: var(--text-base); color: var(--fg-muted); margin: var(--space-1) 0 0; }
+
+    .tab-bar { display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid var(--border); margin-bottom: var(--space-4); }
+    .tabs-line { display: flex; gap: 0; }
+    .tab-line { padding: var(--space-2) var(--space-4); font-size: var(--text-sm); font-weight: 500; color: var(--fg-muted); border-bottom: 2px solid transparent; margin-bottom: -1px; cursor: pointer; transition: color .15s, border-color .15s; }
+    .tab-line.active { color: var(--fg); border-bottom-color: var(--accent-500); }
+    .tab-line:not(.active):hover { color: var(--fg); border-bottom-color: var(--border-strong); }
+
+    .toolbar-row { display: flex; gap: var(--space-3); align-items: center; margin-bottom: var(--space-5); }
+    .search-field { flex: 1; position: relative; }
+    .search-field .search-icon { position: absolute; left: var(--space-3); top: 50%; transform: translateY(-50%); color: var(--fg-subtle); font-size: var(--text-sm); pointer-events: none; }
+    .search-field .input { padding-left: 34px; }
+
+    .input { width: 100%; padding: 8px var(--space-3); border: 1px solid var(--border); border-radius: var(--radius-md); background: var(--surface); color: var(--fg); font-size: var(--text-base); transition: border-color .15s, box-shadow .15s; }
+    .input:focus { outline: none; border-color: var(--accent-500); box-shadow: 0 0 0 3px var(--accent-50); }
+    .input.is-error { border-color: var(--danger); }
+
+    .btn { display: inline-flex; align-items: center; justify-content: center; gap: var(--space-2); padding: 8px 16px; border-radius: var(--radius-md); border: 1px solid transparent; font-size: var(--text-sm); font-weight: 600; transition: background .15s, border-color .15s, opacity .15s; min-height: 36px; white-space: nowrap; }
+    .btn:focus-visible { outline: 2px solid var(--accent-600); outline-offset: 2px; }
+    .btn-primary { background: var(--accent-500); color: #fff; }
+    .btn-primary:hover { background: var(--accent-600); }
+    .btn-primary:disabled { opacity: .5; cursor: not-allowed; }
+    .btn-secondary { background: var(--surface); border-color: var(--border); color: var(--fg); }
+    .btn-secondary:hover { background: var(--surface-hover); }
+    .btn-ghost { color: var(--fg-muted); }
+    .btn-sm { padding: 4px 10px; font-size: var(--text-xs); min-height: 28px; }
+
+    .dispatch-cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: var(--space-4); }
+    .dispatch-cards.empty-view { display: flex; align-items: center; justify-content: center; min-height: calc(90vh - 240px); }
+    .dispatch-cards.empty-view .empty-state { width: 100%; max-width: 560px; }
+    .dispatch-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: var(--space-4) var(--space-5); transition: border-color .15s, box-shadow .15s; }
+    .dispatch-card:hover { border-color: var(--accent-500); box-shadow: var(--shadow-md); }
+    .dispatch-card-header { display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: var(--space-3); }
+    .dispatch-card-id { font-weight: 600; font-size: var(--text-lg); font-family: var(--font-mono); }
+    .dispatch-card-meta { display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-2) var(--space-4); font-size: var(--text-sm); }
+    .dispatch-card-meta-label { font-size: var(--text-xs); font-weight: 600; text-transform: uppercase; letter-spacing: .06em; color: var(--fg-muted); }
+    .dispatch-card-meta-value { font-weight: 500; }
+    .dispatch-card-footer { display: flex; align-items: center; justify-content: space-between; margin-top: var(--space-3); padding-top: var(--space-3); border-top: 1px solid var(--border); gap: var(--space-2); }
+
+    .status-badge { display: inline-flex; align-items: center; gap: 4px; padding: 2px 10px; border-radius: var(--radius-full); font-size: var(--text-xs); font-weight: 600; }
+    .status-created { background: var(--info-bg); color: var(--info-fg); }
+    .status-dispatched { background: var(--amber-bg); color: var(--amber-fg); }
+    .status-returned { background: var(--green-bg); color: var(--green-fg); }
+
+    .empty-state { text-align: center; padding: 4rem 1.5rem; }
+    .empty-icon { width: 64px; height: 64px; border-radius: 50%; background: var(--accent-50); display: flex; align-items: center; justify-content: center; margin: 0 auto 1rem; font-size: 24px; color: var(--accent-500); }
+    .empty-title { font-size: var(--text-lg); font-weight: 600; margin: 0 0 var(--space-2); }
+    .empty-desc { font-size: var(--text-sm); color: var(--fg-muted); max-width: 36ch; margin: 0 auto; }
+
+    .log-list { display: flex; flex-direction: column; gap: var(--space-3); }
+    .log-item { display: flex; align-items: flex-start; gap: var(--space-3); padding: var(--space-3) var(--space-4); border: 1px solid var(--border); border-radius: var(--radius-md); background: var(--surface); }
+    .log-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; margin-top: 6px; }
+    .log-dot.create { background: var(--info-fg); }
+    .log-dot.print { background: var(--accent-500); }
+    .log-dot.dispatch { background: var(--amber-fg); }
+    .log-dot.return { background: var(--success-fg); }
+    .log-content { flex: 1; }
+    .log-title { font-weight: 600; font-size: var(--text-sm); }
+    .log-meta { font-size: var(--text-xs); color: var(--fg-muted); margin-top: 2px; }
+
+    /* Slide Panel */
+    .slide-overlay { position: fixed; inset: 0; background: rgba(17,24,39,.45); backdrop-filter: blur(4px); z-index: 300; opacity: 0; pointer-events: none; transition: opacity .2s; }
+    .slide-overlay.open { opacity: 1; pointer-events: auto; }
+    .slide-panel { position: fixed; top: 0; right: 0; bottom: 0; width: 100%; max-width: 560px; background: var(--surface); z-index: 301; transform: translateX(100%); transition: transform .3s ease-out; display: flex; flex-direction: column; box-shadow: -4px 0 32px rgba(0,0,0,.12); }
+    .slide-panel.open { transform: translateX(0); }
+    .slide-header { padding: var(--space-4) var(--space-5); border-bottom: 1px solid var(--border); flex-shrink: 0; display: flex; align-items: center; justify-content: space-between; gap: var(--space-3); }
+    .slide-header h3 { font-size: var(--text-lg); font-weight: 700; }
+    .slide-header-id { font-family: var(--font-mono); font-size: var(--text-sm); color: var(--fg-muted); }
+    .slide-body-wrapper { flex: 1; overflow: hidden; position: relative; }
+    .slide-body { position: absolute; inset: 0; overflow-y: auto; padding: var(--space-5); transition: transform .3s ease, opacity .3s ease; background: var(--surface); }
+    .slide-body.slide-out-left { transform: translateX(-100%); opacity: 0; }
+    .slide-body.slide-in-right { transform: translateX(100%); opacity: 0; }
+    .slide-body.slide-active { transform: translateX(0); opacity: 1; }
+    .slide-footer { padding: var(--space-4) var(--space-5); border-top: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; flex-shrink: 0; gap: var(--space-2); }
+    .slide-footer-right { display: flex; gap: var(--space-2); }
+
+    .field-label { display: block; font-size: var(--text-xs); font-weight: 600; text-transform: uppercase; letter-spacing: .06em; color: var(--fg-muted); margin-bottom: var(--space-2); }
+    .field-section { margin-bottom: var(--space-5); }
+    .field-section-title { font-size: var(--text-sm); font-weight: 600; color: var(--fg); margin-bottom: var(--space-3); padding-bottom: var(--space-2); border-bottom: 1px solid var(--border); }
+
+    .dispatch-meta { display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-3) var(--space-5); margin-bottom: var(--space-5); }
+    .meta-label { font-size: var(--text-xs); font-weight: 600; text-transform: uppercase; letter-spacing: .06em; color: var(--fg-muted); margin-bottom: 2px; }
+    .meta-value { font-size: var(--text-base); font-weight: 500; }
+    .meta-value .mono { font-family: var(--font-mono); font-size: var(--text-sm); font-weight: 600; }
+
+    /* Ticket cards */
+    .ticket-card { border: 1px solid var(--border); border-radius: var(--radius-md); margin-bottom: var(--space-3); overflow: hidden; }
+    .ticket-card-header { padding: var(--space-3) var(--space-4); background: var(--accent-50); border-bottom: 1px solid var(--accent-100); font-weight: 600; font-size: var(--text-sm); display: flex; justify-content: space-between; }
+    .ticket-card-sku { font-family: var(--font-mono); font-size: var(--text-xs); color: var(--accent-700); }
+    .ticket-card-body { padding: var(--space-3) var(--space-4); text-align: center; }
+    .ticket-qty { font-family: var(--font-mono); font-size: var(--text-3xl); font-weight: 700; color: var(--accent-500); }
+
+    /* Stepper input */
+    .stepper {
+      display: inline-flex;
+      align-items: stretch;
+      height: 40px;
+      width: 140px;
+      background: var(--surface);
+      border: 1px solid var(--border-strong);
+      border-radius: var(--radius-md);
+      overflow: hidden;
+      box-shadow: var(--shadow-sm);
+      flex-shrink: 0;
+    }
+    .stepper-btn {
+      width: 38px;
+      height: 100%;
+      display: grid;
+      place-items: center;
+      background: var(--bg);
+      border: none;
+      cursor: pointer;
+      font-size: var(--text-sm);
+      color: var(--fg);
+      transition: background .15s, color .15s;
+      flex-shrink: 0;
+      user-select: none;
+    }
+    .stepper-btn:hover { background: var(--surface-hover); }
+    .stepper-btn:active { background: var(--border-strong); }
+    .stepper-btn:first-child { border-right: 1px solid var(--border); }
+    .stepper-btn:last-child { border-left: 1px solid var(--border); }
+    .stepper-input {
+      flex: 1;
+      width: 100%;
+      min-width: 0;
+      padding: 0 4px;
+      border: none;
+      font-family: var(--font-mono);
+      font-size: var(--text-lg);
+      font-weight: 600;
+      text-align: center;
+      background: var(--surface);
+      color: var(--fg);
+    }
+    .stepper-input:focus { outline: none; background: #f8fafc; }
+    .stepper-input::-webkit-inner-spin-button,
+    .stepper-input::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
+    .stepper-input { -moz-appearance: textfield; }
+
+    /* Verify Product Card / Load row */
+    .load-row {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      margin-bottom: var(--space-4);
+      overflow: hidden;
+      box-shadow: 0 1px 3px rgba(0,0,0,.03);
+      transition: border-color .15s, box-shadow .15s;
+    }
+    .load-row:hover { border-color: var(--border-strong); }
+    .load-row-header {
+      padding: 12px 18px;
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: var(--space-2);
+    }
+    .load-row-name { font-weight: 700; font-size: var(--text-base); color: var(--fg); }
+    .load-row-sku {
+      font-family: var(--font-mono);
+      font-size: var(--text-xs);
+      font-weight: 600;
+      color: var(--fg-muted);
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      padding: 2px 8px;
+    }
+    .load-row-body {
+      padding: 16px 18px;
+      display: grid;
+      grid-template-columns: auto 1fr auto;
+      gap: var(--space-4);
+      align-items: center;
+    }
+    .load-col-ticket { display: flex; flex-direction: column; }
+    .load-col-actual { display: flex; flex-direction: column; align-items: center; }
+    .load-col-diff { display: flex; flex-direction: column; align-items: center; }
+    .load-row-label {
+      font-size: var(--text-xs);
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: .08em;
+      color: var(--fg-muted);
+      margin-bottom: 6px;
+    }
+    .load-row-ticket {
+      font-family: var(--font-mono);
+      font-size: 24px;
+      font-weight: 700;
+      line-height: 40px;
+      color: var(--fg);
+    }
+    .load-actual-controls {
+      display: flex;
+      align-items: center;
+      gap: var(--space-3);
+      flex-wrap: wrap;
+    }
+    .load-row-diff {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-family: var(--font-mono);
+      font-size: var(--text-sm);
+      font-weight: 700;
+      padding: 6px 14px;
+      border-radius: var(--radius-full);
+      height: 34px;
+      white-space: nowrap;
+      transition: all .15s;
+    }
+    .diff-zero {
+      background: var(--success-bg);
+      border: 1px solid #a7f3d0;
+      color: var(--success-fg);
+    }
+    .diff-warn {
+      background: var(--amber-bg);
+      border: 1px solid #fde68a;
+      color: var(--amber-fg);
+    }
+    .diff-danger {
+      background: var(--danger-bg);
+      border: 1px solid #fecaca;
+      color: var(--danger-fg);
+    }
+
+    /* Summary Totals */
+    .load-totals {
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 16px 20px;
+      margin-top: var(--space-4);
+      margin-bottom: var(--space-4);
+      background: var(--surface);
+      box-shadow: 0 1px 3px rgba(0,0,0,.03);
+    }
+    .load-totals-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 6px 0;
+      font-size: var(--text-base);
+    }
+    .load-totals-label { color: var(--fg-muted); font-size: var(--text-sm); font-weight: 500; }
+    .load-totals-val { font-family: var(--font-mono); font-size: var(--text-base); font-weight: 600; color: var(--fg); }
+    .load-totals-divider {
+      height: 1px;
+      background: var(--border);
+      margin: 8px 0;
+    }
+    .load-totals-row.total .load-totals-label {
+      font-weight: 700;
+      font-size: var(--text-base);
+      color: var(--fg);
+    }
+    .load-totals-row.total .load-totals-val {
+      font-size: var(--text-xl);
+      font-weight: 700;
+    }
+
+    /* Notes Section */
+    .verify-notes-section {
+      margin-top: var(--space-4);
+      margin-bottom: var(--space-4);
+    }
+    .verify-notes-input {
+      width: 100%;
+      min-height: 84px;
+      resize: vertical;
+      line-height: 1.5;
+      padding: 10px 14px;
+      font-family: inherit;
+    }
+
+    /* Footer Back Icon Button */
+    .btn-icon-box {
+      width: 42px;
+      height: 42px;
+      min-height: 42px;
+      padding: 0;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: var(--radius-md);
+      font-size: var(--text-base);
+      flex-shrink: 0;
+    }
+
+    .slide-body.slide-in-left { transform: translateX(-100%); opacity: 0; }
+    .slide-body.slide-out-right { transform: translateX(100%); opacity: 0; }
+
+    .modal-warning { background: var(--warning-bg); border: 1px solid #fde68a; border-radius: var(--radius-md); padding: var(--space-3) var(--space-4); font-size: var(--text-sm); color: var(--warning-fg); margin-bottom: var(--space-4); display: flex; align-items: center; gap: var(--space-2); }
+
+    .modal-overlay { position: fixed; inset: 0; background: rgba(17,24,39,.45); backdrop-filter: blur(4px); z-index: 400; display: none; align-items: center; justify-content: center; padding: var(--space-5); }
+    .modal-overlay.open { display: flex; }
+    .modal { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background: var(--surface); border-radius: var(--radius-lg); box-shadow: 0 10px 15px -3px rgba(0,0,0,.08); width: calc(100% - 2.5rem); max-width: 480px; max-height: calc(100vh - 2.5rem); display: none; flex-direction: column; overflow: hidden; z-index: 401; }
+    .modal.open { display: flex; }
+    .modal-header { padding: var(--space-4) var(--space-5); border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; flex-shrink: 0; }
+    .modal-header h3 { font-size: var(--text-lg); font-weight: 600; }
+    .modal-body { padding: var(--space-4) var(--space-5); overflow-y: auto; flex: 1; }
+    .modal-footer { padding: var(--space-4) var(--space-5); border-top: 1px solid var(--border); display: flex; align-items: center; justify-content: flex-end; gap: var(--space-2); flex-shrink: 0; }
+
+    @keyframes toastIn { from { opacity: 0; transform: translateX(20px); } to { opacity: 1; transform: translateX(0); } }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .toast-msg { position: fixed; top: 16px; right: 16px; z-index: 9999; min-width: 300px; max-width: 420px; display: flex; align-items: flex-start; gap: 12px; padding: 16px 20px; border-radius: 12px; box-shadow: 0 8px 24px rgba(0,0,0,.18); animation: toastIn .25s ease-out; }
+    .toast-msg.success { background: #ecfdf5; border: 1px solid #a7f3d0; border-left: 4px solid #059669; color: #059669; }
+    .toast-msg.danger { background: #fef2f2; border: 1px solid #fecaca; border-left: 4px solid #dc2626; color: #dc2626; }
+
+    @media (max-width: 920px) {
+      .sidebar-ph { display: none; }
+      .header-ph { padding: 0 var(--space-4); }
+      .content-chrome, .content-scroll { padding-left: var(--space-4); padding-right: var(--space-4); }
+      .dispatch-cards { grid-template-columns: 1fr; }
+      .slide-panel { max-width: 100%; }
+    }
+
+    @media (max-width: 520px) {
+      .slide-header { padding: var(--space-3) var(--space-4); }
+      .slide-body { padding: var(--space-4); }
+      .slide-footer { padding: var(--space-3) var(--space-4); gap: var(--space-2); }
+      .load-row-header { padding: 10px 14px; }
+      .load-row-body {
+        grid-template-columns: auto 1fr auto;
+        gap: var(--space-3);
+        padding: 12px 14px;
+      }
+      .load-row-ticket { font-size: 20px; line-height: 38px; }
+      .stepper { width: 126px; height: 38px; }
+      .stepper-btn { width: 34px; }
+      .stepper-input { font-size: var(--text-base); }
+      .load-actual-controls { gap: var(--space-2); }
+      .load-row-diff { padding: 4px 10px; font-size: var(--text-xs); height: 30px; }
+      .load-totals { padding: 12px 16px; }
+      .btn { padding: 8px 12px; }
+      .slide-footer-right { gap: var(--space-2); }
+    }
+  </style>
+</head>
+<body>
+  <div class="app-shell">
+    <aside class="sidebar-ph"><div class="sidebar-ph-label">Sidebar</div></aside>
+    <div class="main-area">
+      <header class="header-ph">
+        <div style="font-size:var(--text-xs);font-weight:600;text-transform:uppercase;letter-spacing:.06em;color:var(--fg-subtle);border:2px dashed var(--border);border-radius:var(--radius-md);padding:var(--space-2) var(--space-4)">Header</div>
+        <div class="lang-toggle"><button id="lang-en" class="active" onclick="setLang('en')">EN</button><button id="lang-km" onclick="setLang('km')">ខ្មែរ</button></div>
+      </header>
+      <div class="main-content">
+        <div class="content-chrome">
+          <div class="page-header">
+            <h1 class="page-title" data-en="Verify Dispatch" data-km="ផ្ទៀងផ្ទាត់">Verify Dispatch</h1>
+            <p class="page-desc" data-en="Verify actual load and record departures." data-km="ផ្ទៀងផ្ទាត់ការផ្ទុក និងកត់ត្រាការចេញដំណើរ។">Verify actual load and record departures.</p>
+          </div>
+          <div class="tab-bar">
+            <div class="tabs-line">
+              <button class="tab-line active" data-tab="toVerify" onclick="switchTab('toVerify')" data-en="To Verify" data-km="ត្រូវផ្ទៀងផ្ទាត់">To Verify</button>
+              <button class="tab-line" data-tab="history" onclick="switchTab('history')" data-en="History" data-km="ប្រវត្តិ">History</button>
+              <button class="tab-line" data-tab="log" onclick="switchTab('log')" data-en="Activity Log" data-km="កំណត់ត្រាសកម្មភាព">Activity Log</button>
+            </div>
+          </div>
+          <div class="toolbar-row">
+            <div class="search-field">
+              <i class="fa-solid fa-magnifying-glass search-icon"></i>
+              <input type="text" id="card-search" class="input" data-en-placeholder="Search or scan Dispatch ID…" data-km-placeholder="ស្វែងរក ឬស្កេនលេខ…" placeholder="Search or scan Dispatch ID…" oninput="filterCards()" />
+            </div>
+          </div>
+        </div>
+        <div class="content-scroll" id="verify-scroll">
+          <div class="content-inner">
+            <div id="tab-toVerify"><div id="toverify-list" class="dispatch-cards"></div></div>
+            <div id="tab-log" hidden><div id="log-list" class="log-list"></div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="slide-overlay" id="slideOverlay" onclick="closePanel()"></div>
+  <div class="slide-panel" id="slidePanel">
+    <div class="slide-header">
+      <div><h3 id="panelTitle">Verify Dispatch</h3><div class="slide-header-id" id="panelSubtitle"></div></div>
+      <button class="btn btn-sm btn-ghost" onclick="closePanel()"><i class="fa-solid fa-xmark"></i></button>
+    </div>
+    <div class="slide-body-wrapper" id="slideBodyWrapper">
+      <div class="slide-body slide-active" id="step1Body"></div>
+      <div class="slide-body" id="step2Body" hidden></div>
+    </div>
+    <div class="slide-footer" id="slideFooter"></div>
+  </div>
+
+  <div class="modal-overlay" id="confirmOverlay"></div>
+  <div class="modal" id="confirmModal">
+    <div class="modal-header"><h3 id="confirmTitle">Confirm</h3><button class="btn btn-sm btn-ghost" onclick="closeConfirm()"><i class="fa-solid fa-xmark"></i></button></div>
+    <div class="modal-body" id="confirmBody"></div>
+    <div class="modal-footer" id="confirmFooter"></div>
+  </div>
+
+<script>
+const PRODUCTS = [
+  { id: 'ICE-BLK', nameEn: 'Block Ice', nameKm: 'ទឹកកកដុំ', unit: 'block' },
+  { id: 'ICE-TB-BG', nameEn: 'Big Tube', nameKm: 'បំពង់ធំ', unit: 'tube' },
+  { id: 'ICE-TB-SM', nameEn: 'Small Tube', nameKm: 'បំពង់តូច', unit: 'tube' }
+];
+
+let PLANS = [
+  { id: 'DP-260921001', date: '2026-09-21', departure: '08:30', truck: 'T-05', driver: 'D01', route: 'R-A', salesperson: 'D02', backupDriver: '', method: 'driver', quantities: { 'ICE-BLK': 120, 'ICE-TB-BG': 80, 'ICE-TB-SM': 200 }, status: 'created', recordedBy: 'admin' },
+  { id: 'DP-260921002', date: '2026-09-20', departure: '06:00', truck: 'T-06', driver: 'D02', route: 'R-B', salesperson: 'D03', backupDriver: 'D04', method: 'order', quantities: { 'ICE-BLK': 50, 'ICE-TB-SM': 100 }, status: 'dispatched', recordedBy: 'admin' }
+];
+
+let ACTIVITY_LOG = [
+  { type: 'create', icon: 'fa-plus', time: '21 Sep 2026 · 08:32', user: 'admin', text: 'DP-260921001 created (Driver-requested, 400 units)' },
+  { type: 'dispatch', icon: 'fa-truck-fast', time: '20 Sep 2026 · 10:00', user: 'operator02', text: 'DP-260921002 dispatched successfully' }
+];
+
+let currentLang = 'en', currentTab = 'toVerify';
+let activePlan = null, activeIdx = -1;
+let verifyStep = 1;
+let panelFormData = null;
+let panelSaving = false;
+
+const T = {
+  en: {
+    toVerify: 'To Verify', activityLog: 'Activity Log', searchId: 'Search or scan Dispatch ID',
+    truck: 'Truck', driver: 'Driver', route: 'Route', date: 'Date', departure: 'Departure',
+    total: 'Total', status: 'Status', created: 'Created', dispatched: 'Dispatched', returned: 'Returned',
+    salesperson: 'Salesperson', method: 'Method', backup: 'Backup', units: 'units',
+    driverReq: 'Driver-requested', customerOrders: 'Customer orders',
+    verifyDispatch: 'Verify Dispatch', pickingTicket: 'Picking Ticket', actualLoad: 'Actual Load Entry',
+    verifyTicket: 'Verify Ticket', verifyAndDispatch: 'Verify & Dispatch',
+    product: 'Product', ticket: 'Ticket', actual: 'Actual', diff: 'Diff.',
+    ticketTotal: 'Ticket Total', actualTotal: 'Actual Total', variance: 'Variance', confirm: 'Confirm',
+    notes: 'Notes', notesPlaceholder: 'Describe any issues…', cancel: 'Cancel',
+    mismatchBanner: 'Load does not match the ticket. Correct the load, then recheck.',
+    matched: 'All quantities match.', confirmTitle: 'Confirm Departure',
+    confirmText: 'Dispatch {id}? The truck will be marked as dispatched.',
+    successTitle: 'Dispatch Sent', successText: '{id} dispatched successfully.',
+    view: 'View', history: 'History', noHistory: 'No History', noHistoryDesc: 'No plans recorded yet.',
+    noVerify: 'No Dispatches to Verify', noVerifyDesc: 'All plans have been dispatched or none are ready.'
+  },
+  km: {
+    toVerify: 'ត្រូវផ្ទៀងផ្ទាត់', activityLog: 'កំណត់ត្រាសកម្មភាព', searchId: 'ស្វែងរក ឬស្កេន',
+    truck: 'រថយន្ត', driver: 'អ្នកបើកបរ', route: 'ផ្លូវ', date: 'កាលបរិច្ឆេទ', departure: 'ពេលចេញដំណើរ',
+    total: 'សរុប', status: 'ស្ថានភាព', created: 'បានបង្កើត', dispatched: 'បានដឹកជញ្ជូន', returned: 'បានត្រឡប់',
+    salesperson: 'អ្នកលក់', method: 'វិធីសាស្ត្រ', backup: 'បម្រុង', units: 'ឯកតា',
+    driverReq: 'តាមអ្នកបើកបរ', customerOrders: 'ការបញ្ជាទិញ',
+    verifyDispatch: 'ផ្ទៀងផ្ទាត់', pickingTicket: 'ប័ណ្ណយកទំនិញ', actualLoad: 'ការបញ្ចូលផ្ទុកពិតប្រាកដ',
+    verifyTicket: 'ផ្ទៀងផ្ទាត់ប័ណ្ណ', verifyAndDispatch: 'ផ្ទៀងផ្ទាត់ និងដឹកជញ្ជូន',
+    product: 'ផលិតផល', ticket: 'ប័ណ្ណ', actual: 'ពិតប្រាកដ', diff: 'គម្លាត',
+    ticketTotal: 'សរុបប័ណ្ណ', actualTotal: 'សរុបជាក់ស្តែង', variance: 'គម្លាត', confirm: 'បញ្ជាក់',
+    notes: 'កំណត់ចំណាំ', notesPlaceholder: 'រៀបរាប់បញ្ហា…', cancel: 'បោះបង់',
+    mismatchBanner: 'ការផ្ទុកមិនផ្គូផ្គងនឹងប័ណ្ណ។ កែការផ្ទុក បន្ទាប់ពីនោះពិនិត្យម្តងទៀត។',
+    matched: 'បរិមាណទាំងអស់ផ្គូផ្គង។', confirmTitle: 'បញ្ជាក់ការចេញដំណើរ',
+    confirmText: 'ដឹកជញ្ជូន {id}? រថយន្តនឹងត្រូវបានសម្គាល់ថាបានចេញដំណើរ។',
+    successTitle: 'បានដឹកជញ្ជូន', successText: '{id} ត្រូវបានដឹកជញ្ជូនដោយជោគជ័យ។',
+    view: 'មើល', history: 'ប្រវត្តិ', noHistory: 'មិនទាន់មានប្រវត្តិ', noHistoryDesc: 'មិនទាន់មានផែនការត្រូវបានកត់ត្រាទេ។',
+    noVerify: 'គ្មានការដឹកជញ្ជូនត្រូវពិនិត្យ', noVerifyDesc: 'ផែនការទាំងអស់ត្រូវបានដឹកជញ្ជូនរួចហើយ។'
+  }
+};
+function t(k) { return T[currentLang][k] || T['en'][k] || k; }
+function driverLabel(id) { return id; }
+function routeLabel(id) { return id; }
+function productName(id) { const p = PRODUCTS.find(x => x.id === id); return p ? (currentLang === 'km' ? p.nameKm : p.nameEn) : id; }
+
+function setLang(lang) {
+  currentLang = lang;
+  document.getElementById('lang-en').classList.toggle('active', lang === 'en');
+  document.getElementById('lang-km').classList.toggle('active', lang === 'km');
+  document.documentElement.lang = lang;
+  document.querySelectorAll('[data-en]').forEach(el => { el.textContent = el.getAttribute('data-' + lang) || el.getAttribute('data-en'); });
+  document.querySelectorAll('[data-en-placeholder]').forEach(el => { el.placeholder = el.getAttribute('data-' + lang + '-placeholder') || el.getAttribute('data-en-placeholder'); });
+  renderCards();
+  renderLog();
+  if (activePlan) {
+    document.getElementById('panelTitle').textContent = t('verifyDispatch');
+    if (verifyStep === 1) renderStep1(); else renderStep2();
+    renderFooter();
+  }
+}
+
+function switchTab(tab) {
+  currentTab = tab;
+  document.querySelectorAll('.tab-line').forEach(el => el.classList.toggle('active', el.getAttribute('data-tab') === tab));
+  document.getElementById('tab-toVerify').hidden = tab === 'log';
+  document.getElementById('tab-log').hidden = tab !== 'log';
+  renderCards();
+  renderLog();
+}
+
+function filterCards() {
+  const q = (document.getElementById('card-search')?.value || '').toLowerCase();
+  document.querySelectorAll('#toverify-list .dispatch-card').forEach(c => { c.hidden = !c.textContent.toLowerCase().includes(q); });
+}
+
+function renderCards() {
+  const list = document.getElementById('toverify-list');
+  const toVerify = currentTab === 'history' ? PLANS : PLANS.filter(p => p.status === 'created');
+  list.classList.toggle('empty-view', !toVerify.length);
+  if (!toVerify.length) {
+    const emptyTitle = currentTab === 'history' ? t('noHistory') : t('noVerify');
+    const emptyDesc = currentTab === 'history' ? t('noHistoryDesc') : t('noVerifyDesc');
+    list.innerHTML = '<div class="empty-state"><div class="empty-icon"><i class="fa-solid fa-clipboard-check"></i></div><div class="empty-title">'+emptyTitle+'</div><div class="empty-desc">'+emptyDesc+'</div></div>';
+    return;
+  }
+  list.classList.remove('empty-view');
+  let html = '';
+  toVerify.forEach(p => {
+    const totals = p.quantities || {};
+    const total = Object.values(totals).reduce((s,v)=>s+v,0);
+    const isCreated = p.status === 'created';
+    const sc = p.status === 'dispatched' ? 'status-dispatched' : p.status === 'returned' ? 'status-returned' : 'status-created';
+    html += '<div class="dispatch-card" onclick="openVerifyPanel(\''+p.id+'\', 1)">';
+    html += '<div class="dispatch-card-header"><div><div class="dispatch-card-id">'+p.id+'</div><div style="font-size:var(--text-sm);color:var(--fg-muted)">'+p.date+' · '+p.departure+'</div></div>';
+    html += '<span class="status-badge '+sc+'"><i class="fa-solid fa-circle" style="font-size:5px"></i> '+t(p.status)+'</span></div>';
+    html += '<div class="dispatch-card-meta">';
+    html += '<div><span class="dispatch-card-meta-label">'+t('truck')+'</span><span class="dispatch-card-meta-value">'+p.truck+'</span></div>';
+    html += '<div><span class="dispatch-card-meta-label">'+t('driver')+'</span><span class="dispatch-card-meta-value">'+p.driver+'</span></div>';
+    html += '<div><span class="dispatch-card-meta-label">'+t('route')+'</span><span class="dispatch-card-meta-value">'+p.route+'</span></div>';
+    html += '<div><span class="dispatch-card-meta-label">'+t('total')+'</span><span class="dispatch-card-meta-value" style="font-family:var(--font-mono);font-weight:600">'+total+'</span> '+t('units')+'</div></div>';
+    html += '<div class="dispatch-card-footer">';
+    if (isCreated) {
+      html += '<button class="btn btn-primary btn-sm" onclick="event.stopPropagation();openVerifyPanel(\''+p.id+'\', 2)"><i class="fa-solid fa-clipboard-check"></i> '+t('verifyDispatch')+'</button>';
+    } else {
+      html += '<button class="btn btn-secondary btn-sm" onclick="event.stopPropagation();openVerifyPanel(\''+p.id+'\', 1)"><i class="fa-solid fa-eye"></i> '+t('view')+'</button>';
+    }
+    html += '</div></div>';
+  });
+  list.innerHTML = html;
+}
+
+function renderLog() {
+  const c = document.getElementById('log-list');
+  let html = '';
+  ACTIVITY_LOG.forEach(l => { html += '<div class="log-item"><div class="log-dot '+l.type+'"></div><div class="log-content"><div class="log-title">'+l.text+'</div><div class="log-meta">'+l.time+' · '+l.user+'</div></div></div>'; });
+  c.innerHTML = html;
+}
+
+function openVerifyPanel(id, step = 2) {
+  activePlan = PLANS.find(p => p.id === id);
+  activeIdx = PLANS.indexOf(activePlan);
+  verifyStep = (activePlan && activePlan.status !== 'created') ? 1 : step;
+  const totals = activePlan.quantities || {};
+  panelFormData = {
+    products: PRODUCTS.filter(pr => totals[pr.id]).map(pr => ({...pr, plannedQty: totals[pr.id]||0, actualQty: totals[pr.id]||0})),
+    notes: ''
+  };
+  panelSaving = false;
+  document.getElementById('panelTitle').textContent = t('verifyDispatch');
+  document.getElementById('panelSubtitle').textContent = activePlan.id;
+  document.getElementById('slideOverlay').classList.add('open');
+  document.getElementById('slidePanel').classList.add('open');
+  showStep(verifyStep);
+}
+
+function closePanel() {
+  document.getElementById('slideOverlay').classList.remove('open');
+  document.getElementById('slidePanel').classList.remove('open');
+  activePlan = null;
+  panelFormData = null;
+  verifyStep = 1;
+}
+
+function showStep(step) {
+  verifyStep = step;
+  const step1 = document.getElementById('step1Body');
+  const step2 = document.getElementById('step2Body');
+  if (step === 1) {
+    step1.hidden = false;
+    step2.hidden = true;
+    step1.className = 'slide-body slide-active';
+    renderStep1();
+  } else {
+    step1.hidden = true;
+    step2.hidden = false;
+    step2.className = 'slide-body slide-active';
+    renderStep2();
+  }
+  renderFooter();
+}
+
+function renderStep1() {
+  const p = activePlan;
+  const totals = p.quantities || {};
+  let html = '<div class="field-section"><div class="field-section-title"><i class="fa-solid fa-info-circle" style="color:var(--accent-500)"></i> Plan Context</div>';
+  html += '<div class="dispatch-meta">';
+  html += '<div><div class="meta-label">'+t('date')+'</div><div class="meta-value"><span class="mono">'+p.date+'</span></div></div>';
+  html += '<div><div class="meta-label">'+t('departure')+'</div><div class="meta-value"><span class="mono">'+p.departure+'</span></div></div>';
+  html += '<div><div class="meta-label">'+t('truck')+'</div><div class="meta-value">'+p.truck+'</div></div>';
+  html += '<div><div class="meta-label">'+t('driver')+'</div><div class="meta-value">'+p.driver+'</div></div>';
+  html += '<div><div class="meta-label">'+t('route')+'</div><div class="meta-value">'+p.route+'</div></div>';
+  html += '<div><div class="meta-label">'+t('salesperson')+'</div><div class="meta-value">'+p.salesperson+'</div></div>';
+  html += '<div><div class="meta-label">'+t('method')+'</div><div class="meta-value">'+(p.method==='driver'?t('driverReq'):t('customerOrders'))+'</div></div>';
+  html += '<div><div class="meta-label">'+t('total')+'</div><div class="meta-value"><span class="mono">'+Object.values(totals).reduce((s,v)=>s+v,0)+'</span> '+t('units')+'</div></div>';
+  html += '</div></div>';
+  html += '<div class="field-section"><div class="field-section-title"><i class="fa-solid fa-ticket" style="color:var(--accent-500)"></i> '+t('pickingTicket')+'</div>';
+  PRODUCTS.filter(pr => totals[pr.id]).forEach(pr => {
+    html += '<div class="ticket-card"><div class="ticket-card-header"><span>'+productName(pr.id)+'</span><span class="ticket-card-sku">'+pr.id+'</span></div><div class="ticket-card-body"><div class="ticket-qty">'+totals[pr.id]+'</div></div></div>';
+  });
+  html += '</div>';
+  document.getElementById('step1Body').innerHTML = html;
+}
+
+function slideToStep(step) {
+  const fromEl = document.getElementById(step === 1 ? 'step2Body' : 'step1Body');
+  const toEl = document.getElementById('step' + step + 'Body');
+  toEl.hidden = false;
+  toEl.className = 'slide-body ' + (step === 2 ? 'slide-in-right' : 'slide-in-left');
+  verifyStep = step;
+  if (step === 1) renderStep1(); else renderStep2();
+  renderFooter();
+  requestAnimationFrame(() => {
+    toEl.className = 'slide-body slide-active';
+    fromEl.className = 'slide-body ' + (step === 2 ? 'slide-out-left' : 'slide-out-right');
+    setTimeout(() => {
+      document.getElementById('step1Body').hidden = (step !== 1);
+      document.getElementById('step2Body').hidden = (step !== 2);
+    }, 300);
+  });
+}
+
+function renderStep2() {
+  const hasMismatch = panelFormData.products.some(pr => pr.actualQty !== pr.plannedQty);
+  let html = '';
+
+  if (hasMismatch) {
+    html += '<div class="modal-warning" id="verify-mismatch-banner"><i class="fa-solid fa-triangle-exclamation"></i> ' + t('mismatchBanner') + '</div>';
+  } else {
+    html += '<div class="modal-warning" id="verify-mismatch-banner" style="display:none"><i class="fa-solid fa-triangle-exclamation"></i> ' + t('mismatchBanner') + '</div>';
+  }
+
+  panelFormData.products.forEach((pr, i) => {
+    const diff = pr.actualQty - pr.plannedQty;
+    const diffClass = diff === 0 ? 'diff-zero' : (diff > 0 ? 'diff-warn' : 'diff-danger');
+    const diffText = diff === 0 ? '<i class="fa-solid fa-check"></i> 0' : (diff > 0 ? '<i class="fa-solid fa-plus"></i> ' + diff : '<i class="fa-solid fa-minus"></i> ' + Math.abs(diff));
+
+    html += '<div class="load-row" id="load-row-' + i + '">';
+    html += '  <div class="load-row-header">';
+    html += '    <span class="load-row-name">' + productName(pr.id) + '</span>';
+    html += '    <span class="load-row-sku">' + pr.id + '</span>';
+    html += '  </div>';
+    html += '  <div class="load-row-body">';
+    html += '    <div class="load-col-ticket">';
+    html += '      <div class="load-row-label">' + t('ticket') + '</div>';
+    html += '      <div class="load-row-ticket">' + pr.plannedQty + '</div>';
+    html += '    </div>';
+    html += '    <div class="load-col-actual">';
+    html += '      <div class="load-row-label">' + t('actual') + '</div>';
+    html += '      <div class="stepper">';
+    html += '        <button type="button" class="stepper-btn" onclick="stepQty(' + i + ', -1)" aria-label="Decrease quantity"><i class="fa-solid fa-minus"></i></button>';
+    html += '        <input type="number" class="stepper-input" id="stepper-input-' + i + '" value="' + pr.actualQty + '" min="0" oninput="setQty(' + i + ', this.value)">';
+    html += '        <button type="button" class="stepper-btn" onclick="stepQty(' + i + ', 1)" aria-label="Increase quantity"><i class="fa-solid fa-plus"></i></button>';
+    html += '      </div>';
+    html += '    </div>';
+    html += '    <div class="load-col-diff">';
+    html += '      <div class="load-row-label">' + t('variance') + '</div>';
+    html += '      <div class="load-row-diff ' + diffClass + '" id="load-diff-' + i + '">' + diffText + '</div>';
+    html += '    </div>';
+    html += '  </div>';
+    html += '</div>';
+  });
+
+  const totalPlanned = panelFormData.products.reduce((s, pr) => s + pr.plannedQty, 0);
+  const totalActual = panelFormData.products.reduce((s, pr) => s + pr.actualQty, 0);
+  const totalDiff = totalActual - totalPlanned;
+  const varColor = totalDiff === 0 ? 'var(--success-fg)' : 'var(--danger-fg)';
+  const varDisplay = totalDiff === 0 ? '0' : (totalDiff > 0 ? '+' + totalDiff : totalDiff);
+
+  html += '<div class="load-totals">';
+  html += '  <div class="load-totals-row"><span class="load-totals-label">' + t('ticketTotal') + '</span><span class="load-totals-val" id="total-planned-val">' + totalPlanned + '</span></div>';
+  html += '  <div class="load-totals-row"><span class="load-totals-label">' + t('actualTotal') + '</span><span class="load-totals-val" id="total-actual-val">' + totalActual + '</span></div>';
+  html += '  <div class="load-totals-divider"></div>';
+  html += '  <div class="load-totals-row total"><span class="load-totals-label">' + t('variance') + '</span><span class="load-totals-val" id="total-variance-val" style="color:' + varColor + '">' + varDisplay + '</span></div>';
+  html += '</div>';
+
+  html += '<div class="verify-notes-section">';
+  html += '  <div class="load-row-label" style="margin-bottom:8px">' + t('notes') + '</div>';
+  html += '  <textarea class="input verify-notes-input" id="verify-notes" rows="3" placeholder="' + t('notesPlaceholder') + '" oninput="panelFormData.notes=this.value">' + (panelFormData.notes || '') + '</textarea>';
+  html += '</div>';
+
+  document.getElementById('step2Body').innerHTML = html;
+}
+
+function stepQty(i, delta) {
+  panelFormData.products[i].actualQty = Math.max(0, panelFormData.products[i].actualQty + delta);
+  const input = document.getElementById('stepper-input-' + i);
+  if (input) input.value = panelFormData.products[i].actualQty;
+  updateVerifyUI();
+}
+
+function setQty(i, val) {
+  panelFormData.products[i].actualQty = Math.max(0, parseInt(val) || 0);
+  updateVerifyUI();
+}
+
+function updateVerifyUI() {
+  panelFormData.products.forEach((pr, i) => {
+    const diff = pr.actualQty - pr.plannedQty;
+    const diffClass = diff === 0 ? 'diff-zero' : (diff > 0 ? 'diff-warn' : 'diff-danger');
+    const diffText = diff === 0 ? '<i class="fa-solid fa-check"></i> 0' : (diff > 0 ? '<i class="fa-solid fa-plus"></i> ' + diff : '<i class="fa-solid fa-minus"></i> ' + Math.abs(diff));
+    const diffEl = document.getElementById('load-diff-' + i);
+    if (diffEl) {
+      diffEl.className = 'load-row-diff ' + diffClass;
+      diffEl.innerHTML = diffText;
+    }
+  });
+
+  const totalPlanned = panelFormData.products.reduce((s, pr) => s + pr.plannedQty, 0);
+  const totalActual = panelFormData.products.reduce((s, pr) => s + pr.actualQty, 0);
+  const totalDiff = totalActual - totalPlanned;
+  const hasMismatch = panelFormData.products.some(pr => pr.actualQty !== pr.plannedQty);
+  const allEntered = panelFormData.products.some(pr => pr.actualQty > 0);
+  const canDispatch = allEntered && !hasMismatch && !panelSaving;
+
+  const plannedEl = document.getElementById('total-planned-val');
+  if (plannedEl) plannedEl.textContent = totalPlanned;
+
+  const actualEl = document.getElementById('total-actual-val');
+  if (actualEl) actualEl.textContent = totalActual;
+
+  const varEl = document.getElementById('total-variance-val');
+  if (varEl) {
+    varEl.textContent = totalDiff === 0 ? '0' : (totalDiff > 0 ? '+' + totalDiff : totalDiff);
+    varEl.style.color = totalDiff === 0 ? 'var(--success-fg)' : 'var(--danger-fg)';
+  }
+
+  const banner = document.getElementById('verify-mismatch-banner');
+  if (banner) {
+    banner.style.display = hasMismatch ? 'flex' : 'none';
+  }
+
+  const btn = document.getElementById('btn-verify-dispatch');
+  if (btn) {
+    btn.disabled = !canDispatch;
+    btn.style.opacity = canDispatch ? '1' : '.45';
+    btn.style.cursor = canDispatch ? 'pointer' : 'not-allowed';
+  }
+}
+
+function renderFooter() {
+  if (activePlan && activePlan.status !== 'created') {
+    document.getElementById('slideFooter').innerHTML = '<div></div><button class="btn btn-secondary" onclick="closePanel()">'+t('cancel')+'</button>';
+    return;
+  }
+  if (verifyStep === 1) {
+    document.getElementById('slideFooter').innerHTML = '<div></div><div class="slide-footer-right"><button class="btn btn-secondary" onclick="closePanel()">'+t('cancel')+'</button><button class="btn btn-primary" onclick="slideToStep(2)"><i class="fa-solid fa-arrow-right"></i> '+t('verifyTicket')+'</button></div>';
+  } else {
+    const hasMismatch = panelFormData.products.some(pr => pr.actualQty !== pr.plannedQty);
+    const allEntered = panelFormData.products.some(pr => pr.actualQty > 0);
+    const canDispatch = allEntered && !hasMismatch && !panelSaving;
+    document.getElementById('slideFooter').innerHTML = 
+      '<button class="btn btn-secondary btn-icon-box" onclick="slideToStep(1)" title="Back"><i class="fa-solid fa-arrow-left"></i></button>' +
+      '<div class="slide-footer-right">' +
+      '  <button class="btn btn-secondary" onclick="closePanel()">' + t('cancel') + '</button>' +
+      '  <button class="btn btn-primary" id="btn-verify-dispatch"' + (canDispatch ? '' : ' disabled style="opacity:.45;cursor:not-allowed"') + ' onclick="submitVerify()">' +
+      '    <i class="fa-solid fa-truck-fast"></i> ' + t('verifyAndDispatch') +
+      '  </button>' +
+      '</div>';
+  }
+}
+
+function submitVerify() {
+  if (panelSaving) return;
+  const hasMismatch = panelFormData.products.some(pr => pr.actualQty !== pr.plannedQty);
+  if (hasMismatch || !panelFormData.products.some(pr => pr.actualQty > 0)) { renderStep2(); return; }
+  openConfirmModal();
+}
+
+function openConfirmModal() {
+  const totalActual = panelFormData.products.reduce((s,p) => s + p.actualQty, 0);
+  const totalPlanned = panelFormData.products.reduce((s,p) => s + p.plannedQty, 0);
+  document.getElementById('confirmTitle').textContent = t('confirmTitle');
+  document.getElementById('confirmBody').innerHTML = '<p style="font-size:var(--text-base);margin-bottom:var(--space-4)">'+t('confirmText').replace('{id}', activePlan.id)+'</p><div class="dispatch-meta"><div><span class="meta-label">'+t('truck')+'</span><span class="meta-value">'+activePlan.truck+'</span></div><div><span class="meta-label">'+t('driver')+'</span><span class="meta-value">'+activePlan.driver+'</span></div><div><span class="meta-label">'+t('actual')+'</span><span class="meta-value"><span class="mono">'+totalActual+'</span> / '+totalPlanned+' '+t('units')+'</span></div></div>';
+  document.getElementById('confirmFooter').innerHTML = '<button class="btn btn-secondary" onclick="closeConfirm()">'+t('cancel')+'</button><button class="btn btn-primary" id="btn-confirm-dispatch" onclick="confirmDispatch()"><i class="fa-solid fa-check"></i> '+t('confirm')+'</button>';
+  document.getElementById('confirmOverlay').classList.add('open');
+  document.getElementById('confirmModal').classList.add('open');
+}
+
+function closeConfirm() { document.getElementById('confirmOverlay').classList.remove('open'); document.getElementById('confirmModal').classList.remove('open'); }
+
+function confirmDispatch() {
+  const btn = document.getElementById('btn-confirm-dispatch');
+  panelSaving = true;
+  btn.disabled = true;
+  btn.innerHTML = '<i class="fa-solid fa-spinner" style="animation:spin 1s linear infinite"></i> '+t('verifyAndDispatch');
+  setTimeout(() => {
+    PLANS[activeIdx].status = 'dispatched';
+    PLANS[activeIdx].actualQuantities = panelFormData.products.map(p => ({...p}));
+    ACTIVITY_LOG.unshift({ type: 'dispatch', time: 'Just now', user: 'operator', text: activePlan.id+' dispatched successfully' });
+    const savedId = activePlan.id;
+    closeConfirm();
+    closePanel();
+    renderCards();
+    renderLog();
+    showToast('success', t('successTitle'), t('successText').replace('{id}', savedId));
+    panelSaving = false;
+  }, 1400);
+}
+
+function showToast(type, title, text) {
+  const old = document.querySelector('.toast-msg'); if (old) old.remove();
+  const el = document.createElement('div');
+  el.className = 'toast-msg '+type;
+  const icon = type === 'success' ? 'fa-circle-check' : 'fa-circle-exclamation';
+  el.innerHTML = '<div style="font-size:18px;flex-shrink:0;padding-top:2px"><i class="fa-solid '+icon+'"></i></div><div style="flex:1"><div style="font-weight:600;font-size:14px">'+title+'</div><div style="font-size:13px;opacity:.85;margin-top:4px">'+text+'</div></div><button style="background:none;border:none;color:inherit;opacity:.5;font-size:18px;cursor:pointer;padding:4px"><i class="fa-solid fa-xmark"></i></button>';
+  document.body.appendChild(el);
+  el.querySelector('button').onclick = () => el.remove();
+  if (window._toast) clearTimeout(window._toast);
+  window._toast = setTimeout(() => el.remove(), 5000);
+}
+
+document.addEventListener('keydown', function(e) {
+  if (e.key !== 'Escape') return;
+  if (document.getElementById('confirmModal').classList.contains('open')) return closeConfirm();
+  if (document.getElementById('slidePanel').classList.contains('open')) closePanel();
+});
+
+renderCards();
+renderLog();
+</script>
+</body>
+</html>

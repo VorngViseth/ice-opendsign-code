@@ -1,0 +1,22 @@
+{
+  "schemaVersion": 2,
+  "fileName": "references/legacy-prototype/index.html",
+  "currentVersionId": "5241d371-2b61-4d52-90d7-a7ccf147369c",
+  "entries": [
+    {
+      "id": "5241d371-2b61-4d52-90d7-a7ccf147369c",
+      "fileName": "references/legacy-prototype/index.html",
+      "version": 1,
+      "label": "Version 1",
+      "createdAt": 1790404364994,
+      "source": "ai",
+      "prompt": "let's do it",
+      "size": 5084,
+      "mime": "text/html; charset=utf-8",
+      "kind": "html",
+      "contentPath": "0001-5241d371-2b61-4d52-90d7-a7ccf147369c.html",
+      "contentDigest": "25d3bf2980229668c91332f658f90cbfa3beadda43a771331b3ac885a6b6ac17",
+      "promptSource": "message"
+    }
+  ]
+}

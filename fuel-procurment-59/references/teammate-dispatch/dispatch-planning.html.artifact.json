@@ -1,0 +1,19 @@
+{
+  "version": 1,
+  "kind": "html",
+  "title": "references/teammate-dispatch/dispatch-planning.html",
+  "entry": "references/teammate-dispatch/dispatch-planning.html",
+  "renderer": "html",
+  "status": "complete",
+  "exports": [
+    "html",
+    "pdf",
+    "zip"
+  ],
+  "createdAt": "2026-09-25T09:25:04.594Z",
+  "updatedAt": "2026-09-25T09:25:04.594Z",
+  "metadata": {
+    "inferred": true,
+    "reconciled": true
+  }
+}

@@ -1,0 +1,561 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Dispatch Return — Sok Heng Ice Factory</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Hanuman:wght@400;700;900&family=Hanken+Grotesk:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <style>
+    :root {
+      --bg: #f8fafc; --surface: #fff; --surface-hover: #f1f5f9;
+      --fg: #1e293b; --fg-muted: #64748b; --fg-subtle: #94a3b8;
+      --border: #e2e8f0; --border-strong: #cbd5e1;
+      --accent-50: #eef7f9; --accent-100: #d4ecef;
+      --accent-500: #0d7c90; --accent-600: #0a6b7d; --accent-700: #085563;
+      --success: #10b981; --success-bg: #ecfdf5; --success-fg: #059669;
+      --warning: #f59e0b; --warning-bg: #fffbeb; --warning-fg: #d97706;
+      --danger: #ef4444; --danger-bg: #fef2f2; --danger-fg: #dc2626;
+      --info: #3b82f6; --info-bg: #eff6ff; --info-fg: #2563eb;
+      --amber: #f59e0b; --amber-bg: #fffbeb; --amber-fg: #d97706;
+      --green: #10b981; --green-bg: #ecfdf5; --green-fg: #059669;
+      --font-primary: 'Hanken Grotesk', 'Hanuman', ui-sans-serif, system-ui, sans-serif;
+      --font-mono: ui-monospace, 'SF Mono', 'Cascadia Code', monospace;
+      --text-xs: 10px; --text-sm: 12px; --text-base: 14px; --text-lg: 16px;
+      --text-xl: 18px; --text-2xl: 20px; --text-3xl: 24px;
+      --space-1: 4px; --space-2: 8px; --space-3: 12px; --space-4: 16px;
+      --space-5: 20px; --space-6: 24px; --space-8: 32px;
+      --radius-sm: 6px; --radius-md: 8px; --radius-lg: 12px; --radius-full: 9999px;
+      --shadow-sm: 0 1px 2px rgba(0,0,0,.04);
+      --shadow-md: 0 4px 6px -1px rgba(0,0,0,.05), 0 2px 4px -1px rgba(0,0,0,.03);
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body { height: 100%; }
+    body { margin: 0; background: var(--bg); color: var(--fg); font-family: var(--font-primary); font-size: var(--text-base); line-height: 1.5; -webkit-font-smoothing: antialiased; }
+    button { font: inherit; cursor: pointer; border: none; background: none; }
+    input, select, textarea { font: inherit; }
+    @media (prefers-reduced-motion: reduce) { *, *::before, *::after { transition-duration: .01ms !important; animation-duration: .01ms !important; } }
+    [hidden] { display: none !important; }
+
+    .app-shell { display: flex; height: 100%; overflow: hidden; }
+    .sidebar-ph { width: 256px; background: var(--surface); border-right: 1px solid var(--border); flex-shrink: 0; display: flex; align-items: center; justify-content: center; padding: var(--space-4); }
+    .sidebar-ph-label { font-size: var(--text-xs); font-weight: 600; text-transform: uppercase; letter-spacing: .06em; color: var(--fg-subtle); text-align: center; padding: 2rem 1rem; border: 2px dashed var(--border); border-radius: var(--radius-md); white-space: nowrap; }
+    .main-area { flex: 1; display: flex; flex-direction: column; min-width: 0; min-height: 0; }
+    .header-ph { height: 56px; background: var(--surface); border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; padding: 0 var(--space-6); flex-shrink: 0; }
+    .lang-toggle { display: inline-flex; background: var(--bg); border: 1px solid var(--border); border-radius: var(--radius-sm); overflow: hidden; }
+    .lang-toggle button { padding: var(--space-1) var(--space-3); font-size: var(--text-sm); font-weight: 500; color: var(--fg-muted); border-right: 1px solid var(--border); }
+    .lang-toggle button:last-child { border-right: none; }
+    .lang-toggle button.active { background: var(--accent-500); color: #fff; }
+
+    .main-content { flex: 1; display: flex; flex-direction: column; min-height: 0; overflow: hidden; }
+    .content-chrome { flex-shrink: 0; padding: var(--space-6) var(--space-8) 0; max-width: 960px; width: 100%; margin: 0 auto; }
+    .content-scroll { flex: 1; overflow-y: auto; padding: var(--space-4) var(--space-8) var(--space-8); }
+    .content-inner { max-width: 960px; width: 100%; margin: 0 auto; }
+
+    .page-header { margin-bottom: var(--space-5); }
+    .page-title { font-size: var(--text-2xl); font-weight: 700; }
+    .page-desc { font-size: var(--text-base); color: var(--fg-muted); margin: var(--space-1) 0 0; }
+
+    .tab-bar { display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid var(--border); margin-bottom: var(--space-4); }
+    .tabs-line { display: flex; gap: 0; }
+    .tab-line { padding: var(--space-2) var(--space-4); font-size: var(--text-sm); font-weight: 500; color: var(--fg-muted); border-bottom: 2px solid transparent; margin-bottom: -1px; cursor: pointer; transition: color .15s, border-color .15s; }
+    .tab-line.active { color: var(--fg); border-bottom-color: var(--accent-500); }
+    .tab-line:not(.active):hover { color: var(--fg); border-bottom-color: var(--border-strong); }
+
+    .toolbar-row { display: flex; gap: var(--space-3); align-items: center; margin-bottom: var(--space-5); }
+    .search-field { flex: 1; position: relative; }
+    .search-field .search-icon { position: absolute; left: var(--space-3); top: 50%; transform: translateY(-50%); color: var(--fg-subtle); font-size: var(--text-sm); pointer-events: none; }
+    .search-field .input { padding-left: 34px; }
+
+    .input { width: 100%; padding: 8px var(--space-3); border: 1px solid var(--border); border-radius: var(--radius-md); background: var(--surface); color: var(--fg); font-size: var(--text-base); transition: border-color .15s, box-shadow .15s; }
+    .input:focus { outline: none; border-color: var(--accent-500); box-shadow: 0 0 0 3px var(--accent-50); }
+    textarea.input { resize: vertical; min-height: 72px; }
+
+    .btn { display: inline-flex; align-items: center; justify-content: center; gap: var(--space-2); padding: 8px 16px; border-radius: var(--radius-md); border: 1px solid transparent; font-size: var(--text-sm); font-weight: 600; transition: background .15s, border-color .15s, opacity .15s; min-height: 36px; white-space: nowrap; }
+    .btn:focus-visible { outline: 2px solid var(--accent-600); outline-offset: 2px; }
+    .btn-primary { background: var(--accent-500); color: #fff; }
+    .btn-primary:hover { background: var(--accent-600); }
+    .btn-primary:disabled { opacity: .5; cursor: not-allowed; }
+    .btn-secondary { background: var(--surface); border-color: var(--border); color: var(--fg); }
+    .btn-secondary:hover { background: var(--surface-hover); }
+    .btn-ghost { color: var(--fg-muted); }
+    .btn-sm { padding: 4px 10px; font-size: var(--text-xs); min-height: 28px; }
+
+    .dispatch-cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: var(--space-4); }
+    .dispatch-cards.empty-view { display: flex; align-items: center; justify-content: center; min-height: calc(90vh - 240px); }
+    .dispatch-cards.empty-view .empty-state { width: 100%; max-width: 560px; }
+    .dispatch-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: var(--space-4) var(--space-5); transition: border-color .15s, box-shadow .15s; }
+    .dispatch-card:hover { border-color: var(--accent-500); box-shadow: var(--shadow-md); }
+    .dispatch-card-header { display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: var(--space-3); }
+    .dispatch-card-id { font-weight: 600; font-size: var(--text-lg); font-family: var(--font-mono); }
+    .dispatch-card-departure { font-size: var(--text-sm); color: var(--fg-muted); }
+    .dispatch-card-meta { display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-2) var(--space-4); font-size: var(--text-sm); }
+    .dispatch-card-meta-label { font-size: var(--text-xs); font-weight: 600; text-transform: uppercase; letter-spacing: .06em; color: var(--fg-muted); }
+    .dispatch-card-meta-value { font-weight: 500; }
+    .dispatch-card-footer { display: flex; align-items: center; justify-content: space-between; margin-top: var(--space-3); padding-top: var(--space-3); border-top: 1px solid var(--border); }
+
+    .status-badge { display: inline-flex; align-items: center; gap: 4px; padding: 2px 10px; border-radius: var(--radius-full); font-size: var(--text-xs); font-weight: 600; }
+    .status-dispatched { background: var(--amber-bg); color: var(--amber-fg); }
+    .status-returned { background: var(--green-bg); color: var(--green-fg); }
+
+    .empty-state { text-align: center; padding: 4rem 1.5rem; }
+    .empty-icon { width: 64px; height: 64px; border-radius: 50%; background: var(--accent-50); display: flex; align-items: center; justify-content: center; margin: 0 auto 1rem; font-size: 24px; color: var(--accent-500); }
+    .empty-title { font-size: var(--text-lg); font-weight: 600; margin: 0 0 var(--space-2); }
+    .empty-desc { font-size: var(--text-sm); color: var(--fg-muted); max-width: 36ch; margin: 0 auto; }
+
+    .log-list { display: flex; flex-direction: column; gap: var(--space-3); }
+    .log-item { display: flex; align-items: flex-start; gap: var(--space-3); padding: var(--space-3) var(--space-4); border: 1px solid var(--border); border-radius: var(--radius-md); background: var(--surface); }
+    .log-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; margin-top: 6px; }
+    .log-dot.dispatch { background: var(--amber-fg); }
+    .log-dot.return { background: var(--success-fg); }
+    .log-content { flex: 1; }
+    .log-title { font-weight: 600; font-size: var(--text-sm); }
+    .log-meta { font-size: var(--text-xs); color: var(--fg-muted); margin-top: 2px; }
+
+    .slide-overlay { position: fixed; inset: 0; background: rgba(17,24,39,.45); backdrop-filter: blur(4px); z-index: 400; opacity: 0; pointer-events: none; transition: opacity .2s; }
+    .slide-overlay.open { opacity: 1; pointer-events: auto; }
+    .slide-panel { position: fixed; top: 0; right: 0; bottom: 0; width: 100%; max-width: 560px; background: var(--surface); z-index: 401; transform: translateX(100%); transition: transform .3s ease-out; display: flex; flex-direction: column; box-shadow: -4px 0 32px rgba(0,0,0,.12); }
+    .slide-panel.open { transform: translateX(0); }
+    .slide-header { padding: var(--space-4) var(--space-5); border-bottom: 1px solid var(--border); flex-shrink: 0; display: flex; align-items: center; justify-content: space-between; gap: var(--space-3); }
+    .slide-header h3 { font-size: var(--text-lg); font-weight: 700; }
+    .slide-header-sub { font-size: var(--text-sm); color: var(--fg-muted); }
+    .slide-body { flex: 1; overflow-y: auto; padding: var(--space-5); background: var(--surface); }
+    .slide-footer { padding: var(--space-4) var(--space-5); border-top: 1px solid var(--border); display: flex; align-items: center; justify-content: flex-end; flex-shrink: 0; gap: var(--space-3); }
+
+    .dispatch-meta { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: var(--space-4) var(--space-5); margin-bottom: var(--space-5); }
+    .meta-label { font-size: var(--text-xs); font-weight: 600; text-transform: uppercase; letter-spacing: .06em; color: var(--fg-muted); margin-bottom: 2px; }
+    .meta-value { font-size: var(--text-base); font-weight: 500; color: var(--fg); }
+    .meta-value .mono { font-family: var(--font-mono); font-size: var(--text-sm); font-weight: 600; }
+    .section-title { font-size: var(--text-base); font-weight: 700; color: var(--fg); margin: 0 0 var(--space-3); display: flex; align-items: center; gap: var(--space-2); }
+    .section-title i { color: var(--accent-500); font-size: 13px; }
+    .section-sep { border: none; border-top: 1px solid var(--border); margin: var(--space-5) 0; }
+
+    .data-table { width: 100%; border-collapse: collapse; }
+    .data-table th { font-size: var(--text-xs); font-weight: 600; text-transform: uppercase; letter-spacing: .06em; color: var(--fg-muted); text-align: left; padding: var(--space-3) var(--space-3); border-bottom: 1px solid var(--border); white-space: nowrap; }
+    .data-table th.num, .data-table td.num { text-align: right; }
+    .data-table td { padding: var(--space-3) var(--space-3); border-bottom: 1px solid var(--border); vertical-align: middle; }
+    .data-table tr:last-child td { border-bottom: none; }
+    .data-table .summary-row td { border-top: 2px solid var(--border-strong); font-weight: 600; background: var(--bg); }
+    .return-input { width: 70px; padding: 6px 8px; border: 1px solid var(--border); border-radius: var(--radius-sm); font-family: var(--font-mono); font-size: var(--text-base); text-align: right; background: var(--surface); color: var(--fg); font-variant-numeric: tabular-nums; }
+    .return-input:focus { outline: none; border-color: var(--accent-500); box-shadow: 0 0 0 3px var(--accent-50); }
+    .field-label { display: block; font-size: var(--text-xs); font-weight: 600; text-transform: uppercase; letter-spacing: .06em; color: var(--fg-muted); margin-bottom: var(--space-2); }
+    .return-qty-section { margin-top: var(--space-5); }
+    .return-product { border: 1px solid var(--border); border-radius: var(--radius-lg); overflow: hidden; background: var(--surface); margin-bottom: var(--space-4); box-shadow: var(--shadow-sm); }
+    .return-product-header { padding: var(--space-3) var(--space-4); background: var(--surface); border-bottom: 1px solid var(--border); display: flex; flex-direction: column; gap: 2px; }
+    .return-product-name { font-weight: 700; font-size: var(--text-base); color: var(--fg); }
+    .return-product-sku { font-family: var(--font-mono); font-size: var(--text-xs); color: var(--fg-muted); }
+    .return-product-body { padding: var(--space-4); }
+    .return-loaded-section { margin-bottom: var(--space-4); }
+    .return-loaded-label { font-size: var(--text-xs); font-weight: 700; text-transform: uppercase; letter-spacing: .08em; color: var(--fg-muted); margin-bottom: 4px; }
+    .return-loaded-value { font-family: var(--font-mono); font-size: 38px; font-weight: 800; line-height: 1.1; color: var(--fg); font-variant-numeric: tabular-nums; }
+    .return-inputs-grid { display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-3); margin-bottom: var(--space-4); }
+    .return-input-field { display: flex; flex-direction: column; gap: 4px; }
+    .return-input-label { font-size: var(--text-xs); font-weight: 700; text-transform: uppercase; letter-spacing: .06em; color: var(--fg-muted); }
+    .return-metric-input { width: 100%; height: 44px; padding: 8px 12px; border: 1px solid var(--border); border-radius: var(--radius-md); font-family: var(--font-mono); font-size: var(--text-lg); font-weight: 600; text-align: right; background: var(--surface); color: var(--fg); font-variant-numeric: tabular-nums; transition: border-color .15s, box-shadow .15s; }
+    .return-metric-input:focus { outline: none; border-color: var(--accent-500); box-shadow: 0 0 0 3px var(--accent-50); }
+    .return-metric-input:disabled { background: var(--bg); color: var(--fg); cursor: default; }
+    .return-product-total { padding: var(--space-3) var(--space-4); border: 1px solid var(--border); border-radius: var(--radius-md); background: var(--bg); display: flex; align-items: center; justify-content: space-between; }
+    .return-total-label { font-size: var(--text-xs); font-weight: 700; text-transform: uppercase; letter-spacing: .08em; color: var(--fg-muted); }
+    .return-total-value { font-family: var(--font-mono); font-size: var(--text-xl); font-weight: 800; color: var(--fg); }
+    .return-summary { border: 2px solid var(--border-strong); border-radius: var(--radius-lg); padding: var(--space-4); margin-top: var(--space-5); background: var(--bg); }
+    .return-summary-title { font-size: var(--text-sm); font-weight: 800; text-transform: uppercase; letter-spacing: .06em; color: var(--fg); margin-bottom: var(--space-3); }
+    .return-summary-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--space-3) var(--space-4); }
+    .return-summary-row { display: flex; align-items: baseline; justify-content: space-between; gap: var(--space-3); padding: 4px 0; font-size: var(--text-sm); }
+    .return-summary-row.total { border-top: 2px solid var(--border-strong); margin-top: 8px; padding-top: 8px; font-weight: 700; grid-column: 1 / -1; }
+    .return-summary-row .label { color: var(--fg-muted); font-weight: 600; }
+    .return-summary-row .value { font-family: var(--font-mono); font-weight: 700; color: var(--fg); }
+
+    .modal-overlay { position: fixed; inset: 0; background: rgba(17,24,39,.45); backdrop-filter: blur(4px); z-index: 500; display: none; align-items: center; justify-content: center; padding: var(--space-5); }
+    .modal-overlay.open { display: flex; }
+    .modal { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background: var(--surface); border-radius: var(--radius-lg); box-shadow: 0 10px 15px -3px rgba(0,0,0,.08); width: calc(100% - 2.5rem); max-width: 480px; max-height: calc(100vh - 2.5rem); display: none; flex-direction: column; overflow: hidden; z-index: 501; }
+    .modal.open { display: flex; }
+    .modal-header { padding: var(--space-4) var(--space-5); border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; flex-shrink: 0; }
+    .modal-header h3 { font-size: var(--text-lg); font-weight: 600; }
+    .modal-body { padding: var(--space-4) var(--space-5); overflow-y: auto; flex: 1; }
+    .modal-footer { padding: var(--space-4) var(--space-5); border-top: 1px solid var(--border); display: flex; align-items: center; justify-content: flex-end; gap: var(--space-2); flex-shrink: 0; }
+
+    @keyframes toastIn { from { opacity: 0; transform: translateX(20px); } to { opacity: 1; transform: translateX(0); } }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .toast-msg { position: fixed; top: 16px; right: 16px; z-index: 9999; min-width: 300px; max-width: 420px; display: flex; align-items: flex-start; gap: 12px; padding: 16px 20px; border-radius: 12px; box-shadow: 0 8px 24px rgba(0,0,0,.18); animation: toastIn .25s ease-out; }
+    .toast-msg.success { background: #ecfdf5; border: 1px solid #a7f3d0; border-left: 4px solid #059669; color: #059669; }
+    .toast-msg.danger { background: #fef2f2; border: 1px solid #fecaca; border-left: 4px solid #dc2626; color: #dc2626; }
+
+    @media (max-width: 920px) {
+      .sidebar-ph { display: none; }
+      .header-ph { padding: 0 var(--space-4); }
+      .content-chrome, .content-scroll { padding-left: var(--space-4); padding-right: var(--space-4); }
+      .dispatch-cards { grid-template-columns: 1fr; }
+      .slide-panel { max-width: 100%; }
+    }
+  </style>
+</head>
+<body>
+  <div class="app-shell">
+    <aside class="sidebar-ph"><div class="sidebar-ph-label">Sidebar</div></aside>
+    <div class="main-area">
+      <header class="header-ph">
+        <div style="font-size:var(--text-xs);font-weight:600;text-transform:uppercase;letter-spacing:.06em;color:var(--fg-subtle);border:2px dashed var(--border);border-radius:var(--radius-md);padding:var(--space-2) var(--space-4)">Header</div>
+        <div class="lang-toggle"><button id="lang-en" class="active" onclick="setLang('en')">EN</button><button id="lang-km" onclick="setLang('km')">ខ្មែរ</button></div>
+      </header>
+      <div class="main-content">
+        <div class="content-chrome">
+          <div class="page-header">
+            <h1 class="page-title" data-en="Dispatch Return" data-km="ការត្រឡប់ទឹកកក">Dispatch Return</h1>
+            <p class="page-desc" data-en="Record returned/unsold ice against dispatched loads." data-km="កត់ត្រាទឹកកកដែលត្រឡប់/មិនបានលក់ធៀបនឹងការផ្ទុកដឹកជញ្ជូន។">Record returned/unsold ice against dispatched loads.</p>
+          </div>
+          <div class="tab-bar">
+            <div class="tabs-line">
+              <button class="tab-line active" data-tab="toReturn" onclick="switchTab('toReturn')" data-en="To Return" data-km="ត្រូវត្រឡប់">To Return</button>
+              <button class="tab-line" data-tab="history" onclick="switchTab('history')" data-en="History" data-km="ប្រវត្តិ">History</button>
+              <button class="tab-line" data-tab="log" onclick="switchTab('log')" data-en="Activity Log" data-km="កំណត់ត្រាសកម្មភាព">Activity Log</button>
+            </div>
+          </div>
+          <div class="toolbar-row">
+            <div class="search-field">
+              <i class="fa-solid fa-magnifying-glass search-icon"></i>
+              <input type="text" id="card-search" class="input" data-en-placeholder="Search or scan Dispatch ID…" data-km-placeholder="ស្វែងរក ឬស្កេនលេខ…" placeholder="Search or scan Dispatch ID…" oninput="filterCards()" />
+            </div>
+          </div>
+        </div>
+        <div class="content-scroll" id="return-scroll">
+          <div class="content-inner">
+            <div id="tab-toReturn"><div id="toreturn-list" class="dispatch-cards"></div></div>
+            <div id="tab-log" hidden><div id="log-list" class="log-list"></div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="slide-overlay" id="slideOverlay" onclick="closePanel()"></div>
+  <div class="slide-panel" id="slidePanel">
+    <div class="slide-header">
+      <div><h3 id="panelTitle">Record Return</h3><div class="slide-header-sub" id="panelSubtitle"></div></div>
+      <button class="btn btn-sm btn-ghost" onclick="closePanel()"><i class="fa-solid fa-xmark"></i></button>
+    </div>
+    <div class="slide-body" id="slideBody"></div>
+    <div class="slide-footer" id="slideFooter"></div>
+  </div>
+
+  <div class="modal-overlay" id="confirmOverlay"></div>
+  <div class="modal" id="confirmModal">
+    <div class="modal-header"><h3 id="confirmTitle">Confirm</h3><button class="btn btn-sm btn-ghost" onclick="closeConfirm()"><i class="fa-solid fa-xmark"></i></button></div>
+    <div class="modal-body" id="confirmBody"></div>
+    <div class="modal-footer" id="confirmFooter"></div>
+  </div>
+
+<script>
+const PRODUCTS = [
+  { id: 'ICE-TB-SM', nameEn: 'Small Tube', nameKm: 'បំពង់តូច', sku: 'ICE-TB-SM', unit: 'tube' },
+  { id: 'ICE-TB-BG', nameEn: 'Big Tube', nameKm: 'បំពង់ធំ', sku: 'ICE-TB-BG', unit: 'tube' },
+  { id: 'ICE-BLK', nameEn: 'Block Ice', nameKm: 'ទឹកកកដុំ', sku: 'ICE-BLK', unit: 'block' }
+];
+
+let DISPATCHES = [
+  { id: 'DP-260921001', truck: 'T-05', driver: 'D01', route: 'R-A', departure: '2026-09-21 08:30', status: 'dispatched', products: [{ id: 'ICE-TB-SM', loaded: 200, sealed: 0, opened: 0 }, { id: 'ICE-TB-BG', loaded: 150, sealed: 0, opened: 0 }, { id: 'ICE-BLK', loaded: 100, sealed: 0, opened: 0 }] },
+  { id: 'DP-260920002', truck: 'T-06', driver: 'D02', route: 'R-B', departure: '2026-09-20 06:00', status: 'returned', products: [{ id: 'ICE-TB-SM', loaded: 120, sealed: 20, opened: 0 }, { id: 'ICE-BLK', loaded: 50, sealed: 5, opened: 0 }] }
+];
+
+let ACTIVITY_LOG = [
+  { type: 'dispatch', icon: 'fa-truck-fast', time: '21 Sep 2026 · 09:55', user: 'operator02', text: 'DP-260921001 dispatched successfully' },
+  { type: 'return', icon: 'fa-rotate-left', time: '20 Sep 2026 · 17:20', user: 'operator02', text: 'Return recorded for DP-260920002 (sealed 25, opened 0)' }
+];
+
+let currentLang = 'en', currentTab = 'toReturn';
+let activeDispatch = null, activeIdx = -1;
+let panelFormData = null, panelSaving = false;
+
+const T = {
+  en: {
+    toReturn: 'To Return', history: 'History', activityLog: 'Activity Log', searchId: 'Search or scan Dispatch ID',
+    truck: 'Truck', driver: 'Driver', route: 'Route', departure: 'Departure', total: 'Total', status: 'Status',
+    dispatched: 'Dispatched', returned: 'Returned', units: 'units', view: 'View', viewReturn: 'Return Details',
+    recordReturn: 'Record Return', dispatchContext: 'Dispatch Context',
+    quantitiesByProduct: 'Quantities by Product', product: 'Product', loaded: 'Loaded',
+    sealed: 'Returned (sealed)', opened: 'Opened/damaged', totalReturn: 'Total Return',
+    summaryTotals: 'Summary Totals', totalLoaded: 'Total Loaded', totalSealed: 'Total Returned (sealed)', totalOpened: 'Total Opened/damaged',
+    notes: 'Notes', notesPlaceholder: 'Describe any issues...',
+    cancel: 'Cancel', confirmReturn: 'Confirm Return', confirm: 'Confirm',
+    confirmTitle: 'Confirm Return', confirmText: 'Confirm the return for {id}? The returned ice will be recorded.',
+    successTitle: 'Return Recorded', successText: 'Return for {id} has been recorded successfully.',
+    noToReturn: 'No Trucks to Return', noToReturnDesc: 'All trucks have been returned or none are dispatched.',
+    noReturned: 'No Returned Items', noReturnedDesc: 'No returns have been recorded yet.'
+  },
+  km: {
+    toReturn: 'ត្រូវត្រឡប់', history: 'ប្រវត្តិ', activityLog: 'កំណត់ត្រាសកម្មភាព', searchId: 'ស្វែងរក ឬស្កេន',
+    truck: 'រថយន្ត', driver: 'អ្នកបើកបរ', route: 'ផ្លូវ', departure: 'ពេលចេញដំណើរ', total: 'សរុប', status: 'ស្ថានភាព',
+    dispatched: 'បានដឹកជញ្ជូន', returned: 'បានត្រឡប់', units: 'ឯកតា', view: 'មើល', viewReturn: 'ព័ត៌មានលម្អិតការត្រឡប់',
+    recordReturn: 'កត់ត្រាការត្រឡប់', dispatchContext: 'ព័ត៌មានដឹកជញ្ជូន',
+    quantitiesByProduct: 'បរិមាណតាមផលិតផល', product: 'ផលិតផល', loaded: 'ផ្ទុក',
+    sealed: 'ត្រឡប់ (បិទជិត)', opened: 'បើក/ខូច', totalReturn: 'សរុបត្រឡប់',
+    summaryTotals: 'សរុបទាំងអស់', totalLoaded: 'ផ្ទុកសរុប', totalSealed: 'ត្រឡប់សរុប (បិទជិត)', totalOpened: 'បើក/ខូចសរុប',
+    notes: 'កំណត់ចំណាំ', notesPlaceholder: 'រៀបរាប់បញ្ហា...',
+    cancel: 'បោះបង់', confirmReturn: 'បញ្ជាក់ការត្រឡប់', confirm: 'បញ្ជាក់',
+    confirmTitle: 'បញ្ជាក់ការត្រឡប់', confirmText: 'បញ្ជាក់ការត្រឡប់សម្រាប់ {id}? ទឹកកកត្រឡប់នឹងត្រូវបានកត់ត្រា។',
+    successTitle: 'កត់ត្រាការត្រឡប់', successText: 'ការត្រឡប់សម្រាប់ {id} ត្រូវបានកត់ត្រាដោយជោគជ័យ។',
+    noToReturn: 'មិនមានរថយន្តត្រូវត្រឡប់', noToReturnDesc: 'រថយន្តទាំងអស់ត្រឡប់ហើយ ឬគ្មានការដឹកជញ្ជូន។',
+    noReturned: 'មិនមានទំនិញត្រឡប់', noReturnedDesc: 'មិនទាន់មានការត្រឡប់ណាត្រូវបានកត់ត្រាទេ។'
+  }
+};
+function t(k) { return T[currentLang][k] || T['en'][k] || k; }
+function productName(id) { const p = PRODUCTS.find(x => x.id === id); return p ? (currentLang === 'km' ? p.nameKm : p.nameEn) : id; }
+
+function setLang(lang) {
+  currentLang = lang;
+  document.getElementById('lang-en').classList.toggle('active', lang === 'en');
+  document.getElementById('lang-km').classList.toggle('active', lang === 'km');
+  document.documentElement.lang = lang;
+  document.querySelectorAll('[data-en]').forEach(el => { el.textContent = el.getAttribute('data-' + lang) || el.getAttribute('data-en'); });
+  document.querySelectorAll('[data-en-placeholder]').forEach(el => { el.placeholder = el.getAttribute('data-' + lang + '-placeholder') || el.getAttribute('data-en-placeholder'); });
+  renderCards();
+  renderLog();
+  if (activeDispatch) renderPanelBody();
+}
+
+function switchTab(tab) {
+  currentTab = tab;
+  document.querySelectorAll('.tab-line').forEach(el => el.classList.toggle('active', el.getAttribute('data-tab') === tab));
+  document.getElementById('tab-toReturn').hidden = tab === 'log';
+  document.getElementById('tab-log').hidden = tab !== 'log';
+  renderCards();
+  renderLog();
+}
+
+function filterCards() {
+  const q = (document.getElementById('card-search')?.value || '').toLowerCase();
+  document.querySelectorAll('#toreturn-list .dispatch-card').forEach(c => { c.hidden = !c.textContent.toLowerCase().includes(q); });
+}
+
+function renderCards() {
+  const list = document.getElementById('toreturn-list');
+  const toReturn = currentTab === 'history' ? DISPATCHES : DISPATCHES.filter(d => d.status === 'dispatched');
+  list.classList.toggle('empty-view', !toReturn.length);
+  if (!toReturn.length) {
+    const emptyTitle = currentTab === 'history' ? t('noReturned') : t('noToReturn');
+    const emptyDesc = currentTab === 'history' ? t('noReturnedDesc') : t('noToReturnDesc');
+    list.innerHTML = '<div class="empty-state"><div class="empty-icon"><i class="fa-solid fa-truck-ramp-box"></i></div><div class="empty-title">'+emptyTitle+'</div><div class="empty-desc">'+emptyDesc+'</div></div>';
+    return;
+  }
+  list.classList.remove('empty-view');
+  let html = '';
+  toReturn.forEach(d => {
+    const totalLoaded = d.products.reduce((s,p) => s + p.loaded, 0);
+    const isReturned = d.status === 'returned';
+    const sc = isReturned ? 'status-returned' : 'status-dispatched';
+    html += '<div class="dispatch-card">';
+    html += '<div class="dispatch-card-header"><div><div class="dispatch-card-id">'+d.id+'</div><div class="dispatch-card-departure">'+d.departure+'</div></div>';
+    html += '<span class="status-badge '+sc+'"><i class="fa-solid fa-circle" style="font-size:5px"></i> '+t(d.status)+'</span></div>';
+    html += '<div class="dispatch-card-meta">';
+    html += '<div><span class="dispatch-card-meta-label">'+t('truck')+'</span><span class="dispatch-card-meta-value">'+d.truck+'</span></div>';
+    html += '<div><span class="dispatch-card-meta-label">'+t('driver')+'</span><span class="dispatch-card-meta-value">'+d.driver+'</span></div>';
+    html += '<div><span class="dispatch-card-meta-label">'+t('route')+'</span><span class="dispatch-card-meta-value">'+d.route+'</span></div>';
+    html += '<div><span class="dispatch-card-meta-label">'+t('total')+'</span><span class="dispatch-card-meta-value" style="font-family:var(--font-mono);font-weight:600">'+totalLoaded+'</span> '+t('units')+'</div></div>';
+    html += '<div class="dispatch-card-footer">';
+    if (isReturned) {
+      html += '<button class="btn btn-secondary btn-sm" onclick="openReturnPanel(\''+d.id+'\')"><i class="fa-solid fa-eye"></i> '+t('view')+'</button>';
+    } else {
+      html += '<button class="btn btn-primary btn-sm" onclick="openReturnPanel(\''+d.id+'\')"><i class="fa-solid fa-rotate-left"></i> '+t('recordReturn')+'</button>';
+    }
+    html += '</div></div>';
+  });
+  list.innerHTML = html;
+}
+
+function renderLog() {
+  const c = document.getElementById('log-list');
+  let html = '';
+  ACTIVITY_LOG.forEach(l => { html += '<div class="log-item"><div class="log-dot '+l.type+'"></div><div class="log-content"><div class="log-title">'+l.text+'</div><div class="log-meta">'+l.time+' · '+l.user+'</div></div></div>'; });
+  c.innerHTML = html;
+}
+
+function openReturnPanel(id) {
+  activeDispatch = DISPATCHES.find(d => d.id === id);
+  if (!activeDispatch) return;
+  activeIdx = DISPATCHES.indexOf(activeDispatch);
+  const isView = activeDispatch.status === 'returned';
+  panelFormData = {
+    products: activeDispatch.products.map(p => ({...p})),
+    notes: activeDispatch.notes || ''
+  };
+  panelSaving = false;
+  document.getElementById('panelTitle').textContent = isView ? t('viewReturn') : t('recordReturn');
+  document.getElementById('panelSubtitle').textContent = activeDispatch.id;
+  document.getElementById('slideOverlay').classList.add('open');
+  document.getElementById('slidePanel').classList.add('open');
+  renderPanelBody();
+  renderPanelFooter();
+}
+
+function closePanel() {
+  document.getElementById('slideOverlay').classList.remove('open');
+  document.getElementById('slidePanel').classList.remove('open');
+  activeDispatch = null;
+  panelFormData = null;
+}
+
+function renderPanelBody() {
+  const d = activeDispatch;
+  const isView = d && d.status === 'returned';
+  const totals = panelFormData.products.reduce((acc, p) => {
+    acc.loaded += p.loaded;
+    acc.sealed += p.sealed;
+    acc.opened += p.opened;
+    acc.totalReturn += p.sealed + p.opened;
+    return acc;
+  }, { loaded: 0, sealed: 0, opened: 0, totalReturn: 0 });
+  let html = '<div class="section-title"><i class="fa-solid fa-truck-fast"></i> '+t('dispatchContext')+'</div>';
+  html += '<div class="dispatch-meta">';
+  html += '<div><div class="meta-label">'+t('truck')+'</div><div class="meta-value">'+d.truck+'</div></div>';
+  html += '<div><div class="meta-label">'+t('driver')+'</div><div class="meta-value">'+d.driver+'</div></div>';
+  html += '<div><div class="meta-label">'+t('departure')+'</div><div class="meta-value"><span class="mono">'+d.departure+'</span></div></div>';
+  html += '<div><div class="meta-label">'+t('route')+'</div><div class="meta-value">'+d.route+'</div></div></div>';
+  html += '<hr class="section-sep">';
+  html += '<div class="section-title"><i class="fa-solid fa-table"></i> '+t('quantitiesByProduct')+'</div>';
+  html += '<div class="return-qty-section">';
+  panelFormData.products.forEach((p, i) => {
+    const prod = PRODUCTS.find(x => x.id === p.id);
+    const sku = (prod && prod.sku) ? prod.sku : p.id;
+    const totalReturn = p.sealed + p.opened;
+    html += '<section class="return-product">';
+    html += '<div class="return-product-header">';
+    html += '<div class="return-product-name">'+productName(p.id)+'</div>';
+    html += '<div class="return-product-sku">'+sku+'</div>';
+    html += '</div>';
+    html += '<div class="return-product-body">';
+    html += '<div class="return-loaded-section">';
+    html += '<div class="return-loaded-label">'+t('loaded')+'</div>';
+    html += '<div class="return-loaded-value">'+p.loaded+'</div>';
+    html += '</div>';
+    html += '<div class="return-inputs-grid">';
+    html += '<div class="return-input-field">';
+    html += '<label class="return-input-label" for="sealed-'+i+'">'+t('sealed')+'</label>';
+    if (isView) {
+      html += '<input id="sealed-'+i+'" type="number" class="return-metric-input" value="'+p.sealed+'" disabled />';
+    } else {
+      html += '<input id="sealed-'+i+'" type="number" class="return-metric-input" min="0" value="'+p.sealed+'" oninput="updateReturnField('+i+',\'sealed\',this.value)" />';
+    }
+    html += '</div>';
+    html += '<div class="return-input-field">';
+    html += '<label class="return-input-label" for="opened-'+i+'">'+t('opened')+'</label>';
+    if (isView) {
+      html += '<input id="opened-'+i+'" type="number" class="return-metric-input" value="'+p.opened+'" disabled />';
+    } else {
+      html += '<input id="opened-'+i+'" type="number" class="return-metric-input" min="0" value="'+p.opened+'" oninput="updateReturnField('+i+',\'opened\',this.value)" />';
+    }
+    html += '</div>';
+    html += '</div>';
+    html += '<div class="return-product-total">';
+    html += '<span class="return-total-label">'+t('totalReturn')+'</span>';
+    html += '<span class="return-total-value" id="prod-total-'+i+'">'+totalReturn+'</span>';
+    html += '</div>';
+    html += '</div>';
+    html += '</section>';
+  });
+  html += '</div>';
+  html += '<div class="return-summary"><div class="return-summary-title">'+t('summaryTotals')+'</div><div class="return-summary-grid">';
+  html += '<div class="return-summary-row"><span class="label">'+t('totalLoaded')+'</span><span class="value">'+totals.loaded+'</span></div>';
+  html += '<div class="return-summary-row"><span class="label">'+t('totalSealed')+'</span><span class="value" id="sum-total-sealed">'+totals.sealed+'</span></div>';
+  html += '<div class="return-summary-row"><span class="label">'+t('totalOpened')+'</span><span class="value" id="sum-total-opened">'+totals.opened+'</span></div>';
+  html += '<div class="return-summary-row total"><span class="label">'+t('totalReturn')+'</span><span class="value" id="sum-total-return">'+totals.totalReturn+'</span></div>';
+  html += '</div></div>';
+  html += '<div class="section" style="margin-top:var(--space-5)"><label class="field-label" for="panel-notes">'+t('notes')+'</label><textarea class="input" id="panel-notes" rows="3" placeholder="'+t('notesPlaceholder')+'" '+(isView?'readonly style="background:var(--bg);cursor:default"':'oninput="panelFormData.notes=this.value"')+'>'+panelFormData.notes+'</textarea></div>';
+  document.getElementById('slideBody').innerHTML = html;
+}
+
+function renderPanelFooter() {
+  const isView = activeDispatch && activeDispatch.status === 'returned';
+  if (isView) {
+    document.getElementById('slideFooter').innerHTML = '<div></div><button class="btn btn-secondary" onclick="closePanel()">'+t('cancel')+'</button>';
+  } else {
+    document.getElementById('slideFooter').innerHTML = '<div></div><button class="btn btn-secondary" onclick="closePanel()">'+t('cancel')+'</button><button class="btn btn-primary" id="btn-confirm-return"'+(panelSaving?' disabled style="opacity:.5"':'')+' onclick="submitReturn()"><i class="fa-solid fa-check"></i> '+t('confirmReturn')+'</button>';
+  }
+}
+
+function updateReturnField(i, field, val) {
+  const num = Math.max(0, parseInt(val) || 0);
+  panelFormData.products[i][field] = num;
+  const p = panelFormData.products[i];
+  const prodTotal = p.sealed + p.opened;
+  const prodTotalEl = document.getElementById('prod-total-' + i);
+  if (prodTotalEl) prodTotalEl.textContent = prodTotal;
+
+  const totals = panelFormData.products.reduce((acc, pr) => {
+    acc.loaded += pr.loaded;
+    acc.sealed += pr.sealed;
+    acc.opened += pr.opened;
+    acc.totalReturn += pr.sealed + pr.opened;
+    return acc;
+  }, { loaded: 0, sealed: 0, opened: 0, totalReturn: 0 });
+
+  const sumSealedEl = document.getElementById('sum-total-sealed');
+  const sumOpenedEl = document.getElementById('sum-total-opened');
+  const sumReturnEl = document.getElementById('sum-total-return');
+  if (sumSealedEl) sumSealedEl.textContent = totals.sealed;
+  if (sumOpenedEl) sumOpenedEl.textContent = totals.opened;
+  if (sumReturnEl) sumReturnEl.textContent = totals.totalReturn;
+}
+
+function submitReturn() {
+  if (panelSaving) return;
+  openConfirmModal();
+}
+
+function openConfirmModal() {
+  const totalLoaded = panelFormData.products.reduce((s,p) => s + p.loaded, 0);
+  const totalSealed = panelFormData.products.reduce((s,p) => s + p.sealed, 0);
+  const totalOpened = panelFormData.products.reduce((s,p) => s + p.opened, 0);
+  document.getElementById('confirmTitle').textContent = t('confirmTitle');
+  document.getElementById('confirmBody').innerHTML = '<p style="font-size:var(--text-base);margin-bottom:var(--space-4)">'+t('confirmText').replace('{id}', activeDispatch.id)+'</p><div class="dispatch-meta"><div><span class="meta-label">'+t('loaded')+'</span><span class="meta-value"><span class="mono">'+totalLoaded+' '+t('units')+'</span></span></div><div><span class="meta-label">'+t('sealed')+'</span><span class="meta-value"><span class="mono">'+totalSealed+' '+t('units')+'</span></span></div><div><span class="meta-label">'+t('opened')+'</span><span class="meta-value"><span class="mono">'+totalOpened+' '+t('units')+'</span></span></div></div>';
+  document.getElementById('confirmFooter').innerHTML = '<button class="btn btn-secondary" onclick="closeConfirm()">'+t('cancel')+'</button><button class="btn btn-primary" id="btn-confirm-return-modal" onclick="confirmReturn()"><i class="fa-solid fa-check"></i> '+t('confirm')+'</button>';
+  document.getElementById('confirmOverlay').classList.add('open');
+  document.getElementById('confirmModal').classList.add('open');
+}
+
+function closeConfirm() { document.getElementById('confirmOverlay').classList.remove('open'); document.getElementById('confirmModal').classList.remove('open'); }
+
+function confirmReturn() {
+  const btn = document.getElementById('btn-confirm-return-modal');
+  panelSaving = true;
+  btn.disabled = true;
+  btn.innerHTML = '<i class="fa-solid fa-spinner" style="animation:spin 1s linear infinite"></i> '+t('confirmReturn');
+  setTimeout(() => {
+    DISPATCHES[activeIdx].status = 'returned';
+    DISPATCHES[activeIdx].products = panelFormData.products.map(p => ({...p}));
+    const totalSealed = panelFormData.products.reduce((s,p) => s + p.sealed, 0);
+    const totalOpened = panelFormData.products.reduce((s,p) => s + p.opened, 0);
+    ACTIVITY_LOG.unshift({ type: 'return', time: 'Just now', user: 'operator', text: 'Return recorded for '+activeDispatch.id+' (sealed '+totalSealed+', opened '+totalOpened+')' });
+    const savedId = activeDispatch.id;
+    closeConfirm();
+    closePanel();
+    renderCards();
+    renderLog();
+    showToast('success', t('successTitle'), t('successText').replace('{id}', savedId));
+    panelSaving = false;
+  }, 1400);
+}
+
+function showToast(type, title, text) {
+  const old = document.querySelector('.toast-msg'); if (old) old.remove();
+  const el = document.createElement('div');
+  el.className = 'toast-msg '+type;
+  const icon = type === 'success' ? 'fa-circle-check' : 'fa-circle-exclamation';
+  el.innerHTML = '<div style="font-size:18px;flex-shrink:0;padding-top:2px"><i class="fa-solid '+icon+'"></i></div><div style="flex:1"><div style="font-weight:600;font-size:14px">'+title+'</div><div style="font-size:13px;opacity:.85;margin-top:4px">'+text+'</div></div><button style="background:none;border:none;color:inherit;opacity:.5;font-size:18px;cursor:pointer;padding:4px"><i class="fa-solid fa-xmark"></i></button>';
+  document.body.appendChild(el);
+  el.querySelector('button').onclick = () => el.remove();
+  if (window._toast) clearTimeout(window._toast);
+  window._toast = setTimeout(() => el.remove(), 5000);
+}
+
+document.addEventListener('keydown', function(e) {
+  if (e.key !== 'Escape') return;
+  if (document.getElementById('confirmModal').classList.contains('open')) return closeConfirm();
+  if (document.getElementById('slidePanel').classList.contains('open')) closePanel();
+});
+
+renderCards();
+renderLog();
+</script>
+</body>
+</html>

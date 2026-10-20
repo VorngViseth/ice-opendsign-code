@@ -1,0 +1,22 @@
+{
+  "schemaVersion": 2,
+  "fileName": "references/teammate-dispatch/verify-dispatch.html",
+  "currentVersionId": "0df1c11f-8df3-4808-adfa-ba35191ae885",
+  "entries": [
+    {
+      "id": "0df1c11f-8df3-4808-adfa-ba35191ae885",
+      "fileName": "references/teammate-dispatch/verify-dispatch.html",
+      "version": 1,
+      "label": "Version 1",
+      "createdAt": 1790328327751,
+      "source": "ai",
+      "prompt": "this is a good first step but it kinda overlap with other screen handled by my teammate, let have them all here and perform an assessment",
+      "size": 52156,
+      "mime": "text/html; charset=utf-8",
+      "kind": "html",
+      "contentPath": "0001-0df1c11f-8df3-4808-adfa-ba35191ae885.html",
+      "contentDigest": "b18ac2832b66195a9526abb1118a4136ad81420b7afe2bd5c191c36bbd2900b5",
+      "promptSource": "message"
+    }
+  ]
+}

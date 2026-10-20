@@ -1,0 +1,22 @@
+{
+  "schemaVersion": 2,
+  "fileName": "backups/pre-rollback-react/dispatch-ice-return-3.html",
+  "currentVersionId": "160404e9-168c-4328-a286-ab8745db01d3",
+  "entries": [
+    {
+      "id": "160404e9-168c-4328-a286-ab8745db01d3",
+      "fileName": "backups/pre-rollback-react/dispatch-ice-return-3.html",
+      "version": 1,
+      "label": "Version 1",
+      "createdAt": 1790563470152,
+      "source": "ai",
+      "prompt": "before react typescript",
+      "size": 579,
+      "mime": "text/html; charset=utf-8",
+      "kind": "html",
+      "contentPath": "0001-160404e9-168c-4328-a286-ab8745db01d3.html",
+      "contentDigest": "4243a5b1cbffb08727741261a07f564140c142dae3fdc85dcbefb7f886836819",
+      "promptSource": "message"
+    }
+  ]
+}

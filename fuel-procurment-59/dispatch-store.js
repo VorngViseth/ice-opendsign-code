@@ -1,0 +1,9 @@
+(()=>{'use strict';const D=window.IceDispatchData,K='ice-factory.dispatch-lifecycle.v1';const original=D.trips.map(t=>({...t}));
+function read(){const raw=localStorage.getItem(K);if(!raw)return {version:1,records:{}};const s=JSON.parse(raw);if(s.version!==1||!s.records||Object.values(s.records).some(t=>!t.id||!['created','dispatched','returned'].includes(t.status)||!Array.isArray(t.customerIds)))throw Error('Unreadable dispatch storage');return s;}
+function refresh(){const s=read();D.trips.splice(0,D.trips.length,...original.map(t=>({...t,...s.records[t.id]})),...Object.values(s.records).filter(t=>!original.some(o=>o.id===t.id)));return D.trips;}
+function get(id){refresh();return D.trips.find(t=>t.id===id);}
+function save(t){const s=read();s.records[t.id]=t;localStorage.setItem(K,JSON.stringify(s));refresh();return t;}
+function change(id,fn){const t=get(id);if(!t)throw Error('Dispatch unavailable');const next=JSON.parse(JSON.stringify(t));fn(next);return save(next);}
+function receiptData(id){const parse=(key,empty)=>{const raw=localStorage.getItem(key);return raw?JSON.parse(raw):empty;};const sales=parse('ice-factory.driver-sales.v1',{sales:[]}).sales,receipts=parse('ice-factory.issued-receipts.v1',{receipts:[]}).receipts,co=parse('ice-factory.collections.v1',{tickets:[]});if(!Array.isArray(sales)||!Array.isArray(receipts)||!Array.isArray(co.tickets))throw Error('Unreadable recording data');const norm=v=>v.normalize('NFKC').trim().toLowerCase();const rs=receipts.filter(r=>r.dispatchId===id),ss=sales.filter(s=>s.dispatchId===id),ts=co.tickets.filter(t=>t.dispatch===id);return {sales:ss,receipts:rs,tickets:ts,pendingReceipts:rs.filter(r=>r.outcome!=='blank'&&!ss.some(s=>norm(s.id)===norm(r.id))),pendingTickets:ts.filter(t=>t.status==='pending')};}
+window.DispatchStore={read,refresh,get,save,change,receiptData};try{refresh();}catch(e){window.dispatchStorageError=true;}
+})();

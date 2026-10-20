@@ -1,0 +1,22 @@
+{
+  "schemaVersion": 2,
+  "fileName": "references/legacy-prototype/dispatch.html",
+  "currentVersionId": "c5c33edb-4a9e-40a7-9b08-abbcaec9618e",
+  "entries": [
+    {
+      "id": "c5c33edb-4a9e-40a7-9b08-abbcaec9618e",
+      "fileName": "references/legacy-prototype/dispatch.html",
+      "version": 1,
+      "label": "Version 1",
+      "createdAt": 1790404364994,
+      "source": "ai",
+      "prompt": "let's do it",
+      "size": 4777,
+      "mime": "text/html; charset=utf-8",
+      "kind": "html",
+      "contentPath": "0001-c5c33edb-4a9e-40a7-9b08-abbcaec9618e.html",
+      "contentDigest": "b719b731ad02296a6d11dada2750dff85f10ec7a670a455237b7349927fd7246",
+      "promptSource": "message"
+    }
+  ]
+}

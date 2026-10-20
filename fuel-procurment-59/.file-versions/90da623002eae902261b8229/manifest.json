@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 2,
+  "fileName": "production-sales.html",
+  "currentVersionId": "9da227cd-a207-4c81-b94b-218775fcf4d9",
+  "entries": [
+    {
+      "id": "4670473a-1243-4926-863d-2e5a887e0638",
+      "fileName": "production-sales.html",
+      "version": 1,
+      "label": "Version 1",
+      "createdAt": 1790668753696,
+      "source": "ai",
+      "prompt": "Design **#142 — Production-versus-Sales Comparison** for the ice factory ERP.\n\n**Purpose and audience**\n\nThe **Owner and Executive Director** need to compare how much ice was produced with how much was sold during a selected period, separately by product.\n\nPlace this read-only report under **Reporting**, alongside the Executive Financial Overview (#221). Reuse its navigation, filters and visual style.\n\n**1. Report overview**\n\nProvide a date-range selector and an optional product filter.\n\nShow a comparison table with these columns:\n\n| Product | Unit | Produced | Walk-in sales | Driver sales | Total sold | Difference |\n|---|---|---:|---:|---:|---:|---:|\n| Block ice | Blocks | 500 | 100 | 350 | 450 | +50 |\n| Tube ice | Bags | 1,000 | 200 | 700 | 900 | +100 |\n| Crushed ice | Bags | 300 | 80 | 240 | 320 | −20 |\n\nThese are sample figures only.\n\nCalculate:\n\n- **Total sold = Walk-in sales quantity + Driver sales quantity**\n- **Difference = Recorded production − Recorded sales**\n\nKeep each product separate. Do not combine bags and blocks—or different ice products—into a single quantity total.\n\n**2. Explain what the difference means**\n\nLabel the column **“Production − sales”** or provide an equally clear explanation.\n\nThe difference is **not verified remaining stock, waste, theft or profit**. D1 does not track enough inventory information to establish those conclusions.\n\nA negative difference is possible—for example, sales may include ice produced before the selected period. Show it clearly without automatically labelling it an error or loss.\n\nUse neutral presentation rather than automatically marking positive differences as good and negative differences as bad.\n\n**3. Source records and drill-down**\n\nLet the executive open the records behind each product’s totals.\n\nFor production, show:\n\n- Batch reference.\n- Recorded production-entry date/time.\n- Product.\n- Quantity and unit.\n\nFor sales, show:\n\n- Sale or receipt reference.\n- Relevant sale date/time.\n- Walk-in or driver channel.\n- Customer, where available.\n- Dispatch reference for driver sales.\n- Product quantity and unit.\n\nProvide authorized links to the original records. Preserve the selected period and product when returning to the report.\n\n**4. Counting rules**\n\n- Use recorded production batches and actual recorded sales.\n- Include actual sales quantities whether the customer paid fully, partially or left debt.\n- Debt collection does not create another sale quantity.\n- Planned loads, picking slips and prefilled receipts are not sales.\n- A receipt returned without purchase contributes no sales quantity.\n- Unsold truck returns must not be counted as new production.\n- Count each source record once.\n\nDriver split-bag sales still have unresolved unit/conversion rules. Do not guess how to convert them into bags. Show affected data as **not yet comparable**, and make any resulting incomplete total visible.\n\n**5. States to demonstrate**\n\nInclude:\n\n- A normal period with production and sales.\n- Production with no recorded sales.\n- Sales with no production recorded during that period.\n- No records in the selected period.\n- Missing or incompatible quantity units.\n- Driver-return records still awaiting entry, where that status is available.\n- Loading, failed loading and restricted source access.\n\nDistinguish **zero activity** from **missing or incomplete data**.\n\n**6. Decisions to annotate**\n\nThe exact reporting cutoff, which sales timestamp determines inclusion, and handling corrected or voided records still require agreement. This matters particularly when driver receipts are entered after the sale occurred.\n\nShow proposed behavior for review without silently treating it as confirmed policy.\n\n**Deliverable**\n\nCreate a connected, clickable design covering the comparison, filters and source drill-downs. A simple per-product comparison chart may accompany the table if it improves readability.\n\nSupport **Khmer and English**, phone layouts and tablet/desktop layouts. Keep this report read-only; production entry and sale corrections remain in their operational screens.\n\nSubmit screenshots and an accessible design link under **#142** for Z’s review.",
+      "size": 4677,
+      "mime": "text/html; charset=utf-8",
+      "kind": "html",
+      "contentPath": "0001-4670473a-1243-4926-863d-2e5a887e0638.html",
+      "promptSource": "message",
+      "contentDigest": "2e5beb2388aeb0593bafe4ab56e4d18e567a8ba8341cb83acfcf3fd173b5fad0"
+    },
+    {
+      "id": "9da227cd-a207-4c81-b94b-218775fcf4d9",
+      "fileName": "production-sales.html",
+      "version": 2,
+      "label": "Version 2",
+      "createdAt": 1790743320895,
+      "source": "ai",
+      "prompt": "feedback:\n\n> Add **Production vs sales** to the executive overview as a compact summary card, using the existing #142 report for its detail view.\n>\n> The card should show:\n>\n> | Product | Produced | Sold |\n> |---|---:|---:|\n> | Block ice | … blocks | … blocks |\n> | Tube ice | … bags | … bags |\n> | Crushed ice | … bags | … bags |\n>\n> - Use the shared **Daily / Weekly / Monthly** selection.\n> - Keep each product and its unit separate; do not show a combined quantity total.\n> - **View details** switches to a **Production vs sales** report tab. Keep this report permanently accessible through desktop navigation and the mobile report selector.\n> - Preserve the selected period when switching between the overview and detail.\n> - Reuse #142’s reporting logic and design.\n> - Do not label the production–sales difference as remaining stock, waste or loss. Sales can include ice produced before the selected period.\n> - Clearly flag incomplete production/sales records or quantities that cannot be compared reliably, including unresolved split-bag conversions. Do not display missing information as zero.\n>\n> Keep the overview card limited to this small table and its detail action. Charts, explanations and supporting records belong in the detailed report.\n\nRemove the standalone Production vs sales item from the sidebar. Access it through Reporting → Production vs sales, using the desktop report tabs or mobile report selector.\nThe overview card’s View details action should switch to that same report tab and preserve the selected period.\nKeep the operational Production sidebar item for recording production; this change only relocates the report.",
+      "size": 5006,
+      "mime": "text/html; charset=utf-8",
+      "kind": "html",
+      "contentPath": "0002-9da227cd-a207-4c81-b94b-218775fcf4d9.html",
+      "contentDigest": "9e5af27263a4d7b36c9c5b203b3aac1445b3c9ab0dbf5b19e06a860f0fdf0204",
+      "promptSource": "message"
+    }
+  ]
+}

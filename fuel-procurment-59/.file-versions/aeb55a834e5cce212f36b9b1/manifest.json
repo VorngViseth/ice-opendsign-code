@@ -1,0 +1,22 @@
+{
+  "schemaVersion": 2,
+  "fileName": "backups/pre-rollback-react/debt-collection.html",
+  "currentVersionId": "50730e5b-2e1e-4c34-9b83-28a1f9bd0ed1",
+  "entries": [
+    {
+      "id": "50730e5b-2e1e-4c34-9b83-28a1f9bd0ed1",
+      "fileName": "backups/pre-rollback-react/debt-collection.html",
+      "version": 1,
+      "label": "Version 1",
+      "createdAt": 1790563470151,
+      "source": "ai",
+      "prompt": "before react typescript",
+      "size": 579,
+      "mime": "text/html; charset=utf-8",
+      "kind": "html",
+      "contentPath": "0001-50730e5b-2e1e-4c34-9b83-28a1f9bd0ed1.html",
+      "contentDigest": "4243a5b1cbffb08727741261a07f564140c142dae3fdc85dcbefb7f886836819",
+      "promptSource": "message"
+    }
+  ]
+}
